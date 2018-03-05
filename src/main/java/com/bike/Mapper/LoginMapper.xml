@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bike.Mapper.LoginMapper">
+	
+	<resultMap id="UserMap" type="com.bike.Dto.User" >
+	    <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+	    <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+	    <result column="u_password" property="u_password" jdbcType="VARCHAR" />
+	    <result column="u_sex" property="u_sex" jdbcType="VARCHAR" />
+	    <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+	    <result column="u_phone" property="u_phone" jdbcType="VARCHAR" />
+	    <result column="u_address" property="u_address" jdbcType="VARCHAR" />
+	    <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <resultMap id="AdminMap" type="com.bike.Dto.Admin" >
+	    <result column="a_email" property="a_email" jdbcType="VARCHAR" />
+	    <result column="a_password" property="a_password" jdbcType="VARCHAR" />
+  </resultMap>
+	
+	 <select id="findUser" parameterType="com.bike.Dto.User"  resultMap="UserMap">
+         select * from b_user where u_email = #{email}
+     </select>
+
+     <select id="userLogin" parameterType="com.bike.Dto.User"  resultMap="UserMap">
+         select * from b_user where u_email = #{email} and u_password = #{password}
+     </select>
+     
+     <select id="findAdmin" parameterType="com.bike.Dto.Admin"  resultMap="AdminMap">
+         select * from b_admin where a_email = #{email}
+     </select>
+     
+      <select id="adminLogin" parameterType="com.bike.Dto.Admin"  resultMap="AdminMap">
+         select * from b_admin where a_email = #{email} and a_password = #{password}
+     </select>
+     
+     
+ </mapper>
+ 

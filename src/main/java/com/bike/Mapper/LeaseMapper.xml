@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bike.Mapper.LeaseMapper">
+	
+	<resultMap id="BikeMap" type="com.bike.Dto.Bike" >
+	    <result column="b_uuid" property="b_uuid" jdbcType="DECIMAL" />
+	    <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+	    <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+	    <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+        </association>
+  </resultMap>
+  
+  <resultMap id="SiteMap" type="com.bike.Dto.Site" >
+	     <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="LeaseMap" type="com.bike.Dto.Lease" >
+	     <result column="l_uuid" property="l_uuid" jdbcType="VARCHAR" />
+             <result column="l_leaseTime" property="l_leaseTime" jdbcType="VARCHAR" />
+             <result column="l_returnTime" property="l_returnTime" jdbcType="VARCHAR" />
+             <result column="l_money" property="l_money" jdbcType="DECIMAL" />
+             <result column="l_status" property="l_status" jdbcType="VARCHAR" />
+         <association property="user" javaType="com.bike.Dto.User">
+             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
+             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+        </association>
+         <association property="bike" javaType="com.bike.Dto.Bike">
+             <result column="b_uuid" property="b_uuid" jdbcType="VARCHAR" />
+             <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+             <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+            <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+        </association>
+        </association>
+  </resultMap>
+	
+     <!-- lease bike -->
+     <insert id="leaseBike" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="l_uuid">
+		insert into b_lease(l_leaseTime,l_status,u_uuid,b_uuid) values (#{l_leaseTime}, #{l_status}, #{u_uuid}, #{b_uuid})
+	</insert>
+    <update id="updateBike_leaseBike" parameterType="java.util.HashMap">
+		update b_bike 
+    		<set>
+    				b_status = #{b_status} , s_uuid = #{s_uuid}
+    		</set>
+    		where b_uuid = #{b_uuid}
+     </update>
+     <update id="updateSite_leaseBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    			<if test = "s_capacity>0">
+    				s_capacity = #{s_capacity}+1
+    			</if>
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+     
+     
+     <!-- return bike -->
+     <update id="updateBike_returnBike" parameterType="java.util.HashMap">
+		update b_bike 
+    		<set>
+    				b_status = #{b_status} , s_uuid = #{s_uuid}
+    		</set>
+    		where b_uuid = #{b_uuid}
+     </update>
+     <update id="updateSite_returnBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    			<if test = "s_capacity>0">
+    				s_capacity = #{s_capacity}-1
+    			</if>
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+     <update id="returnBike" parameterType="java.util.HashMap">
+		update b_lease
+    		<set>
+    			l_status = #{l_status} , l_returnTime = #{l_returnTime} , l_money = #{l_money}
+    		</set>
+    		where l_uuid = #{l_uuid}
+     </update>
+     <update id="deductMoneyInBalance" parameterType="java.util.HashMap">
+		update b_user
+    		<set>
+    			u_balance = #{u_balance}-#{l_money}
+    		</set>
+    		where u_uuid = #{u_uuid}
+     </update>
+<!--      <update id="deductMoneyInDeposit" parameterType="java.util.HashMap"> -->
+<!-- 		update b_deposit -->
+<!--     		<set> -->
+<!--     			d_money = #{d_money}-#{l_money} -->
+<!--     		</set> -->
+<!--     		where d_uuid = #{d_uuid} -->
+<!--      </update> -->
+     
+     
+     
+     <!-- get leaseBike by uuid -->
+     <select id="getLeaseBikeByUUID" resultMap="LeaseMap" parameterType="int">
+     	select * from b_lease  where l_uuid = #{l_uuid}
+     </select>
+      <select id="getLeaseBike" resultMap="LeaseMap" parameterType="int">
+     	select * from b_lease  where u_uuid = #{u_uuid}
+     </select>
+     
+     
+ </mapper>
+ 

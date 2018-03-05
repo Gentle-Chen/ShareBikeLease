@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bike.Mapper.PageMapper">
+	
+	<resultMap id="BikeMap" type="com.bike.Dto.Bike" >
+	    <result column="b_uuid" property="b_uuid" jdbcType="DECIMAL" />
+	    <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+	    <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+	    <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+        </association>
+  </resultMap>
+  
+  <resultMap id="SiteMap" type="com.bike.Dto.Site" >
+	     <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="LeaseMap" type="com.bike.Dto.Lease" >
+	     <result column="l_uuid" property="l_uuid" jdbcType="VARCHAR" />
+             <result column="l_leaseTime" property="l_leaseTime" jdbcType="VARCHAR" />
+             <result column="l_returnTime" property="l_returnTime" jdbcType="VARCHAR" />
+             <result column="l_money" property="l_money" jdbcType="DECIMAL" />
+             <result column="l_status" property="l_status" jdbcType="VARCHAR" />
+         <association property="user" javaType="com.bike.Dto.User">
+             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
+             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+        </association>
+         <association property="bike" javaType="com.bike.Dto.Bike">
+             <result column="b_uuid" property="b_uuid" jdbcType="VARCHAR" />
+             <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+             <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+            <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+        </association>
+        </association>
+  </resultMap>
+	
+<!-- 	<sql id="Base_Column_List" > -->
+<!--     	id, status, s_id -->
+<!--   	</sql> -->
+
+     <!-- get all bike page -->
+      <select id="selectBikeTotalCount" resultType="Long">
+			select count(*) from b_bike as a,b_site as b where a.s_uuid=b.s_uuid
+	  </select>
+	  <select id="selectPageBike" resultMap="BikeMap" parameterType="java.util.HashMap">    
+		    select from b_bike as a,b_site as b 
+		    <where>
+		    	a.s_uuid=b.s_uuid
+		    </where> 
+		    	limit #{startNum},#{pageSize}
+<!-- 		    order by a.update_time desc -->
+    </select>
+     
+ </mapper>
+ 

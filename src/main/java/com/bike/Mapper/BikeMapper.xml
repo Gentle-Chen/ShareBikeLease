@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bike.Mapper.BikeMapper">
+	
+	<resultMap id="BikeMap" type="com.bike.Dto.Bike" >
+	    <result column="b_uuid" property="b_uuid" jdbcType="DECIMAL" />
+	    <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+	    <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+	    <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+        </association>
+  </resultMap>
+  
+  <resultMap id="SiteMap" type="com.bike.Dto.Site" >
+	     <result column="s_uuid" property="s_uuid" jdbcType="VARCHAR" />
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="LeaseMap" type="com.bike.Dto.Lease" >
+	     <result column="l_uuid" property="l_uuid" jdbcType="VARCHAR" />
+             <result column="l_leaseTime" property="l_leaseTime" jdbcType="VARCHAR" />
+             <result column="l_returnTime" property="l_returnTime" jdbcType="VARCHAR" />
+             <result column="l_money" property="l_money" jdbcType="DECIMAL" />
+             <result column="l_status" property="l_status" jdbcType="VARCHAR" />
+         <association property="user" javaType="com.bike.Dto.User">
+             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
+             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+        </association>
+         <association property="bike" javaType="com.bike.Dto.Bike">
+             <result column="b_uuid" property="b_uuid" jdbcType="VARCHAR" />
+             <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+             <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+            <association property="site" javaType="com.bike.Dto.Site">
+             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+        </association>
+        </association>
+  </resultMap>
+	
+<!-- 	<sql id="Base_Column_List" > -->
+<!--     	id, status, s_id -->
+<!--   	</sql> -->
+
+	<!-- add bike  -->
+	<insert id="addBike" parameterType="com.bike.Dto.Bike" >
+		insert into b_bike(b_id,b_status,s_uuid) values (#{b_id},#{b_status}, #{site.s_uuid})
+	</insert>
+	<update id="updateSite_addBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    			<if test = "s_capacity>0">
+    				s_capacity = #{s_capacity}-1
+    			</if>
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+	
+	<!-- get all bike -->
+     <select id="getAllBike" resultMap="BikeMap">
+<!--      	select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid and a.s_uuid != 1 -->
+			select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid
+     </select>
+     
+     <!-- get all bike page -->
+      <select id="selectBikeTotalCount" resultType="Long" parameterType="java.util.HashMap">
+			select count(*) from b_bike as a,b_site as b 
+			<where>
+				a.s_uuid=b.s_uuid
+				<if test="b_status != null and b_status !='' ">
+					and b_status = #{b_status}
+				</if>
+			</where> 
+	  </select>
+	  <select id="selectPageBike" resultMap="BikeMap" parameterType="java.util.HashMap">    
+		    select *  from b_bike as a,b_site as b 
+		    <where>
+		    	a.s_uuid=b.s_uuid
+		    </where> 
+		    	limit ${startNum},${pageSize}
+    </select>
+     
+     <!-- get bike by site -->
+     <select id="getBikeBySite" resultMap="BikeMap" parameterType="int">
+     	select * from b_bike  where s_uuid = #{s_uuid} and s_uuid != 1
+     </select>
+     
+     
+     <!-- get by uuid  -->
+      <select id="getBikeByUuid" resultMap="BikeMap" parameterType="int">
+     	select * from b_bike  where b_uuid = #{b_uuid}
+     </select>
+	
+	<!-- get bike by id -->
+	<select id="getBikeById" resultMap="BikeMap" parameterType="String">     
+		select * from b_bike  where b_id = #{b_id}
+	</select>
+     
+     <!-- get bike by status to use for draw -->
+     <select id="countBike" resultType="int" parameterType="String">
+     	select count(*) from b_bike where b_status = #{b_status}
+     </select>
+     
+     <!-- get using bike count by time -->
+      <select id="countUsingBikeByTime" resultMap="BikeMap" parameterType="java.util.HashMap">
+<!--      	select a.*,b.u_name,d.s_name from b_lease a, b_user b, b_bike c, b_site d -->
+			select * from b_bike a, b_site b ,b_lease c, b_user d
+     		<where>
+     				a.s_uuid = b.s_uuid and c.b_uuid = a.b_uuid and c.u_uuid = d.u_uuid and b_status = 1
+     			<if test="l_beginTime != null and l_beginTime != '' ">
+     				and DATEDIFF(l_leaseTime,#{l_beginTime})&gt;=0
+     			</if>
+     			<if test="l_endTime != null and l_endTime != '' ">
+     				and DATEDIFF(l_leaseTime,#{l_endTime})&lt;=0
+     			</if>
+     		</where>  
+     		  limit ${startNum},${pageSize}
+     </select>
+     
+     <!-- get other bike count by status -->
+      <select id="countOtherBike" resultMap="BikeMap" parameterType="java.util.HashMap">
+     	select * from b_bike a, b_site b 
+     		<where>
+     				b_status != 1 and a.s_uuid = b.s_uuid
+     			<if test="b_status != null and b_status != '' ">
+     				and b_status = #{b_status}
+     			</if>
+     			<if test="s_uuid != null and s_uuid != '' ">
+     				and a.s_uuid = #{s_uuid}
+     			</if>
+     		</where>
+     		limit ${startNum},${pageSize}
+     </select>
+     
+     <!-- launch bike -->
+     <update id="launchBike"  parameterType="java.util.HashMap">
+     	update b_bike 
+     		<set>
+     			b_status = #{b_status}, s_uuid = #{s_uuid}
+     		</set>
+     		<where>	
+     			b_uuid = #{b_uuid}
+     		</where>
+     </update>
+     <update id="updateSite_launchBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    			<if test = "s_capacity>0">
+    				s_capacity = #{s_capacity}-1
+    			</if>
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+     
+     <!-- delete bike -->
+     <delete id="deleteBike" parameterType="int">
+     	delete from b_bike where b_uuid = #{b_uuid} 
+     </delete>
+     
+     <!-- fix bike -->
+     <delete id="fixBike" parameterType="java.util.HashMap">
+     	update b_bike set b_status = #{b_status} where b_uuid = #{b_uuid} 
+     </delete>
+     <update id="updateSite_fixBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    			<if test = "s_capacity>0">
+    				s_capacity = #{s_capacity}+1
+    			</if>
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+     
+     <!-- fixed bike -->
+     <update id="fixedBike" parameterType="java.util.HashMap">
+     	update b_bike set b_status = #{b_status} where b_status = #{status}
+     </update>
+ </mapper>
+ 

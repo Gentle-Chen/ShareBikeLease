@@ -1,0 +1,78 @@
+.apply-btn.btn-primary{
+	background-color: #0A3290;
+}
+.apply-btn.btn-primary:hover{
+	background-color: #476dc7;
+}
+.btn-primary.btn-twinkle{
+            animation: twinkle 0.15s alternate infinite;
+            -webkit-animation: twinkle 0.15s alternate infinite;
+        }
+.text.btn-primary.btn-twinkle{
+            animation: twinkle-text 0.5s alternate infinite;
+            -webkit-animation: twinkle-text 0.5s alternate infinite;
+        }
+@keyframes twinkle{
+            from{background: #0A3290;}
+            to{background: #7f9fea;}
+        }
+@-webkit-keyframes twinkle{
+            from{background: #0A3290;}
+            to{background: #7f9fea;}
+        }
+@keyframes twinkle-text{
+            from{color: rgba(255,255,255,1.0);}
+            to{color: rgba(255,255,255,0.6);}
+        }
+@-webkit-keyframes twinkle-text{
+            from{color: rgba(255,255,255,1.0);}
+            to{color: rgba(255,255,255,0.6);}
+        }
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #2d9939;
+    background-color: #fff;
+}
+.navbar-nav > li > .dropdown-menu {
+  	border-radius: 0;
+  	border:none;
+    padding: 0px;
+}
+.navbar-nav > li > .dropdown-menu > li > a {
+  	padding: 15px 20px;
+}
+.navbar-nav > li > .dropdown-menu > li > a:hover{
+  	color: #2d9939;
+    background-color: #fff;
+    background-image: none;
+}
+
+
+
+.list-group.cnaac-list{
+	padding-left: 0;
+    margin-bottom: 20px;
+    box-shadow: none;
+}
+.list-group.cnaac-list .list-group-item{
+	border-radius: 0px;
+	
+}
+.list-group.cnaac-list .list-group-item.active,.list-group.cnaac-list .list-group-item.active:hover,.list-group.cnaac-list .list-group-item.active:focus {
+    background-color: #2D9939;
+    border-color: #2D9939;
+    background-image: none;
+    text-shadow: none;
+}
+.list-group.cnaac-list a.list-group-item:hover,.list-group.cnaac-list a.list-group-item:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color:#2D9939;
+}
+.list-group.cnaac-list .list-group-item.more{
+	color: #010066;
+}
+
+.btn-radius{
+	border-radius: 25px !important;
+}
