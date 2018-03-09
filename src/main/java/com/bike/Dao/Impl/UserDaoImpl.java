@@ -27,7 +27,6 @@ public class UserDaoImpl implements UserDao{
 		
 	}
 
-	@Override
 	public boolean checkEmail(String u_email) {
 		String statement = "com.bike.Mapper.UserMapper.checkEmail";
 		List<User> list = sqlSessionTemplate.selectList(statement,u_email);
@@ -39,14 +38,12 @@ public class UserDaoImpl implements UserDao{
 		
 	}
 
-	@Override
 	public User getUserByUuid(int u_uuid) {
 		String statement = "com.bike.Mapper.UserMapper.getUserByUuid";
 		User user = sqlSessionTemplate.selectOne(statement,u_uuid);
 		return user;
 	}
 
-	@Override
 	public User updateUser(int u_uuid, String u_phone, String u_address) {
 		Map<String,Object> updateMap = new HashMap<String,Object>();
 		updateMap.put("u_uuid", u_uuid);
@@ -60,7 +57,6 @@ public class UserDaoImpl implements UserDao{
 		return user;
 	}
 
-	@Override
 	public User updatePassword(int u_uuid, String u_password) {
 		Map<String,Object> updateMap = new HashMap<String,Object>();
 		updateMap.put("u_uuid", u_uuid);
@@ -73,14 +69,12 @@ public class UserDaoImpl implements UserDao{
 		return user;
 	}
 
-	@Override
 	public User getUserByEmail(String email) {
 		String statement = "com.bike.Mapper.UserMapper.getUserByEmail";
 		User user = sqlSessionTemplate.selectOne(statement,email);
 		return user;
 	}
 
-	@Override
 	public void resetPassword(String email,String newPassword) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("u_email", email);

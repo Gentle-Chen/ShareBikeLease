@@ -22,18 +22,16 @@ public class SiteDaoImpl implements SiteDao{
 	@Autowired
 	PageDao pageDao;
 
-	@Override
 	public Site getSiteByUuid(int s_uuid) {
 		String statement = "com.bike.Mapper.SiteMapper.getSiteByUuid";
 		Site site = sqlSessionTemplate.selectOne(statement, s_uuid);
 		return site;
 	}
 
-	@Override
 	public Page getAllSiteByPage(Map<String, Object> pageMap) {
 		Long totalCount = pageDao.selectSiteTotalCount();
-		int pageNum = (int) pageMap.get("pageNum");
-		int pageSize = (int) pageMap.get("pageSize");
+		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
+		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());
         page.setCurrentPage(pageNum);
         int startNum = (page.getCurrentPage() - 1) * page.getPageSize();

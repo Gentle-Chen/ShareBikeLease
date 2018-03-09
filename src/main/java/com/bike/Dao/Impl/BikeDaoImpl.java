@@ -23,7 +23,6 @@ public class BikeDaoImpl implements BikeDao{
 	@Autowired
 	private PageDao pageDao;
 
-	@Override
 	public Bike addBike(Bike bike) {
 		String insertStatement = "com.bike.Mapper.BikeMapper.addBike";
 		String updateStatement = "com.bike.Mapper.BikeMapper.updateSite_addBike";
@@ -52,11 +51,10 @@ public class BikeDaoImpl implements BikeDao{
 	
 			
 
-	@Override
 	public Page getAllBikeByPage(Map<String,Object> pageMap){
 		Long totalCount = pageDao.selectBikeTotalCount(null);
-		int pageNum = (int) pageMap.get("pageNum");
-		int pageSize = (int) pageMap.get("pageSize");
+		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
+		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());
         page.setCurrentPage(pageNum);
         int startNum = (page.getCurrentPage() - 1) * page.getPageSize();
@@ -69,7 +67,6 @@ public class BikeDaoImpl implements BikeDao{
 	
 
 
-	@Override
 	public int countBike(String b_status) {
 		String statement = "com.bike.Mapper.BikeMapper.countBike";
 		List<Object>  list = sqlSessionTemplate.selectList(statement,b_status);
@@ -79,11 +76,10 @@ public class BikeDaoImpl implements BikeDao{
 	}
 
 
-	@Override
 	public Page countUsingBikeByTime(Map<String,Object> pageMap) {
 		Long totalCount = pageDao.selectBikeTotalCount(GlobalConstants.bike_using_status);
-		int pageNum = (int) pageMap.get("pageNum");
-		int pageSize = (int) pageMap.get("pageSize");
+		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
+		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());
         page.setCurrentPage(pageNum);
         int startNum = (page.getCurrentPage() - 1) * page.getPageSize();
@@ -94,11 +90,10 @@ public class BikeDaoImpl implements BikeDao{
 	}
 
 
-	@Override
 	public Page countOtherBike(Map<String, Object> pageMap) {
 		Long totalCount = pageDao.selectBikeTotalCount(GlobalConstants.bike_free_status);
-		int pageNum = (int) pageMap.get("pageNum");
-		int pageSize = (int) pageMap.get("pageSize");
+		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
+		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());
         page.setCurrentPage(pageNum);
         int startNum = (page.getCurrentPage() - 1) * page.getPageSize();
@@ -109,7 +104,6 @@ public class BikeDaoImpl implements BikeDao{
 	}
 
 
-	@Override
 	public List<Bike> getBikeBySite(int s_uuid) {
 		String statement = "com.bike.Mapper.BikeMapper.getBikeBySite";
 		List<Bike> bike = sqlSessionTemplate.selectList(statement,s_uuid);
@@ -117,7 +111,6 @@ public class BikeDaoImpl implements BikeDao{
 	}
 
 
-	@Override
 	public int launchBike(Map<String, Object> bikeMap,Site site) {
 		String statement = "com.bike.Mapper.BikeMapper.launchBike";
 		String updateStatement = "com.bike.Mapper.BikeMapper.updateSite_addBike";

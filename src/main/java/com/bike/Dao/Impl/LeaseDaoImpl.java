@@ -20,7 +20,6 @@ public class LeaseDaoImpl implements LeaseDao {
 	@Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 	
-	@Override
 	public int leaseBike(Map<String,Object> leaseMap) {
 		int l_uuid = 0;
 		String getBikeById = "com.bike.Mapper.BikeMapper.getBikeById";
@@ -52,7 +51,6 @@ public class LeaseDaoImpl implements LeaseDao {
 		}
 	}
 
-	@Override
 	public String returnBike(Map<String, Object> returnMap) {
 		String getSiteById = "com.bike.Mapper.BikeMapper.getSiteById";
 		Site site = sqlSessionTemplate.selectOne(getSiteById, returnMap.get("s_uuid"));

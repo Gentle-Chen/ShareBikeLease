@@ -25,7 +25,6 @@ public class PageDaoImpl implements PageDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	@Override
 	public Long selectBikeTotalCount(String b_status) {
 		String statement = "com.bike.Mapper.BikeMapper.selectBikeTotalCount";
 		Map<String,String> statusMap = new HashMap<String,String>();
@@ -34,7 +33,6 @@ public class PageDaoImpl implements PageDao {
 		return totalCount;
 	}
 
-	@Override
 	public List<Bike> selectPageBike(Map<String,Object> pageMap) {
 		
 		String statement = "com.bike.Mapper.BikeMapper.selectPageBike";
@@ -42,7 +40,6 @@ public class PageDaoImpl implements PageDao {
 		return bike;
 	}
 
-	@Override
 	public List<Bike> countUsingBikeByTime(Map<String, Object> pageMap) {
 		
 		String statement = "com.bike.Mapper.BikeMapper.countUsingBikeByTime";
@@ -50,7 +47,6 @@ public class PageDaoImpl implements PageDao {
 		return bike;
 	}
 
-	@Override
 	public List<Bike> countOtherBike(Map<String, Object> pageMap) {
 		String statement = "com.bike.Mapper.BikeMapper.countOtherBike";
 		List<Bike> bike = sqlSessionTemplate.selectList(statement,pageMap);
@@ -63,7 +59,6 @@ public class PageDaoImpl implements PageDao {
 		return totalCount;
 	}
 	
-	@Override
 	public List<Site> selectPageSite(Map<String, Object> pageMap) {
 		String statement = "com.bike.Mapper.SiteMapper.selectPageSite";
 		List<Site> site = sqlSessionTemplate.selectList(statement,pageMap);

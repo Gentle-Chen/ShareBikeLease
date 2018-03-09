@@ -40,7 +40,7 @@ public class UserController {
 	@RequestMapping(value="/regist",method=RequestMethod.POST)
 	public String regist(User u, HttpServletRequest request){
 		if(u.getU_sex().equals("0")){
-			u.setU_sex("ÄÐ");
+			u.setU_sex("ï¿½ï¿½");
 		}else{
 			u.setU_sex("Å®");
 		}
@@ -159,6 +159,15 @@ public class UserController {
 		System.out.println(userEmail);
 		userDao.resetPassword(userEmail, newPassword);
 		return "login";
+	}
+	
+	@RequestMapping(value="location")
+	public ModelAndView location(HttpServletRequest request) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		ModelAndView mv = new ModelAndView("user/location");
+		mv.addObject("User",user);
+		return mv;
 	}
 	
 }

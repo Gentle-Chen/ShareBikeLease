@@ -27,7 +27,6 @@ public class TestSync2 implements Runnable {
 		System.out.println("main thread b=" + tt.b);
 	}
 
-	@Override
 	public void run() {
 		try {
 			m1();
