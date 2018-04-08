@@ -18,5 +18,7 @@ public interface UserDao {
 	
 	public void resetPassword(String email,String newPassword);
 	
+	public User checkMoney(int u_uuid,double money);
+	
 	
 }

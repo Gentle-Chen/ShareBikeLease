@@ -20,7 +20,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.LeaseDao;
+import com.bike.Dao.UserDao;
 import com.bike.Dto.Lease;
+import com.bike.Dto.User;
+import com.bike.Helper.UserSessionHelper;
 import com.bike.Utils.TimeUtil;
 
 
@@ -30,21 +33,44 @@ public class LeaseController {
 	@Autowired
 	private LeaseDao leaseDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	@RequestMapping(value="toLeaseBike")
 	public String toLeaseBike(){
 		return "bike/leaseBike";
 	}
-	@RequestMapping(value="lease",method=RequestMethod.POST)
+	@RequestMapping(value="lease/{b_uuid}",method=RequestMethod.POST)
 	@ResponseBody
-	public String leaseBike(@RequestBody Map<String,Object> leaseMap) throws ParseException{
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("b_uuid",leaseMap.get("b_uuid"));
-		map.put("u_uuid",leaseMap.get("u_uuid"));
-		map.put("l_leaseTime",TimeUtil.timeStampChangeTime(new Date().getTime()));
-		map.put("l_status",GlobalConstants.lease_no_return);
-		int l_uuid = leaseDao.leaseBike(map);
-		Lease leaseBike = leaseDao.getLeaseBikeByUUID(l_uuid).get(0);
-		JSONObject json = (JSONObject) JSON.toJSON(leaseBike);
+	public String leaseBike(@PathVariable("b_uuid")String b_uuid,HttpServletRequest request) throws ParseException{
+		
+		JSONObject json = new JSONObject();
+		
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		List<Lease> l = leaseDao.getLeaseBike(Integer.parseInt(user.getU_uuid()));
+		for(int i=0;i<l.size();i++) {
+			if(l.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
+				json.put("result", GlobalConstants.lease_no_return);
+				return json.toJSONString();
+			}
+		}
+		User u = userDao.checkMoney(Integer.parseInt(user.getU_uuid()), 0);
+		if(u == null) {
+			json.put("result", GlobalConstants.not_enough_money);
+		}else {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("b_uuid",b_uuid);
+			map.put("u_uuid",user.getU_uuid());
+			map.put("l_leaseTime",TimeUtil.timeStampChangeTime(new Date().getTime()));
+			map.put("l_status",GlobalConstants.lease_no_return);
+			int l_uuid = leaseDao.leaseBike(map);
+			Lease leaseBike = leaseDao.getLeaseBikeByUUID(l_uuid).get(0);
+//			JSONObject json = (JSONObject) JSON.toJSON(leaseBike);
+			json.put("result", GlobalConstants.success);
+			json.put("l_uuid", leaseBike.getL_uuid());
+		}
+		
 		return json.toJSONString();
 	}
 	@RequestMapping(value="toShowLeaseBike/{l_uuid}",method=RequestMethod.GET)
@@ -53,12 +79,13 @@ public class LeaseController {
 		request.setAttribute("leaseBike", leaseBike);
 		return "bike/showLeaseBike";
 	}
-	@RequestMapping(value="ShowLeaseBike/{u_uuid}",method=RequestMethod.GET)
-	public String ShowLeaseBike(HttpServletRequest request,@PathVariable int u_uuid){
-		List<Lease> leaseBike = leaseDao.getLeaseBikeByUUID(u_uuid);
-		request.setAttribute("leaseBike", leaseBike);
-		return "bike/showLeaseBike";
-	}
+//	@RequestMapping(value="ShowLeaseBike/{u_uuid}",method=RequestMethod.GET)
+//	public String ShowLeaseBike(HttpServletRequest request,@PathVariable int u_uuid){
+//		List<Lease> leaseBike = leaseDao.getLeaseBikeByUUID(u_uuid);
+//		request.setAttribute("leaseBike", leaseBike);
+//		return "bike/showLeaseBike";
+//	}
+	
 	
 	@RequestMapping(value="toPay/{u_uuid}/{b_uuid}/{s_uuid}/{l_uuid}",method=RequestMethod.GET)
 	 public String toPay(HttpServletRequest request, @PathVariable String u_uuid,
@@ -82,20 +109,35 @@ public class LeaseController {
 	@ResponseBody
 	public String returnBike(@RequestBody Map<String,Object> leaseMap) throws ParseException{
 //		Map<String,Object> map = new HashMap<String,Object>();
-//		map.put("u_uuid",leaseMap.get("u_uuid"));//ÐÞ¸ÄÓÃ»§½ð¶î
-//		map.put("b_uuid",leaseMap.get("b_uuid"));//ÐÞ¸Äµ¥³µ×´Ì¬
-//		map.put("s_uuid",leaseMap.get("s_uuid"));//ÐÞ¸ÄÕ¾µãÈÝÁ¿                                                             
-//		map.put("l_uuid",leaseMap.get("l_uuid"));//ÐÞ¸Ä×âÁÞ±íµÄ»¹³µÊ±¼ä¡¢½ð¶î¡¢×´Ì¬
+//		map.put("u_uuid",leaseMap.get("u_uuid"));//ï¿½Þ¸ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½
+//		map.put("b_uuid",leaseMap.get("b_uuid"));//ï¿½Þ¸Äµï¿½ï¿½ï¿½×´Ì¬
+//		map.put("s_uuid",leaseMap.get("s_uuid"));//ï¿½Þ¸ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½                                                             
+//		map.put("l_uuid",leaseMap.get("l_uuid"));//ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Þ±ï¿½Ä»ï¿½ï¿½ï¿½Ê±ï¿½ä¡¢ï¿½ï¿½î¡¢×´Ì¬
 //		String leaseTime = bikeDao.getLeaseBikeByUUID((int)leaseMap.get("l_uuid")).get(0).getL_leaseTime();
 //		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
 //		map.put("l_returnTime",returnTime);
 //		double money = TimeUtil.caculate(TimeUtil.timeChangeTimeStamp(returnTime),TimeUtil.timeChangeTimeStamp(leaseTime));
 //		map.put("l_money",money);
+		
+//		double money = Double.parseDouble((String) leaseMap.get("l_money"));
+//		leaseMap.put("l_money", money);
+//		leaseMap.put("l_status",GlobalConstants.lease_returned);
+//		String flag = leaseDao.returnBike(leaseMap);
+//		return flag;
+		JSONObject json = new JSONObject();
+		
 		double money = Double.parseDouble((String) leaseMap.get("l_money"));
 		leaseMap.put("l_money", money);
 		leaseMap.put("l_status",GlobalConstants.lease_returned);
+		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
+		leaseMap.put("l_returnTime",returnTime);
 		String flag = leaseDao.returnBike(leaseMap);
-		return flag;
+		if(flag.equals("yes")) {
+			json.put("result", GlobalConstants.success);
+		}else {
+			
+		}
+		return json.toJSONString();
 	}
 
 }

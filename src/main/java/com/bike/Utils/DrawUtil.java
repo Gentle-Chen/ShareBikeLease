@@ -18,37 +18,37 @@ public class DrawUtil {
 	ChartPanel frame1;  
     public DrawUtil(int a, int b, int c, int d, int e) throws IOException{  
           DefaultPieDataset data = getDataSet(a,b,c,d,e);  
-          JFreeChart chart = ChartFactory.createPieChart3D("µ±Ç°µ¥³µÊı¾İ",data,true,true,false);  
-        //ÉèÖÃ°Ù·Ö±È  
+          JFreeChart chart = ChartFactory.createPieChart3D("å•è½¦æ•°æ®å›¾",data,true,true,false);  
+        //ï¿½ï¿½ï¿½Ã°Ù·Ö±ï¿½  
           PiePlot pieplot = (PiePlot) chart.getPlot();  
-          DecimalFormat df = new DecimalFormat("0.00%");//»ñµÃÒ»¸öDecimalFormat¶ÔÏó£¬Ö÷ÒªÊÇÉèÖÃĞ¡ÊıÎÊÌâ  
-          NumberFormat nf = NumberFormat.getNumberInstance();//»ñµÃÒ»¸öNumberFormat¶ÔÏó  
-          StandardPieSectionLabelGenerator sp1 = new StandardPieSectionLabelGenerator("{0}  {2}", nf, df);//»ñµÃStandardPieSectionLabelGenerator¶ÔÏó  
-          pieplot.setLabelGenerator(sp1);//ÉèÖÃ±ıÍ¼ÏÔÊ¾°Ù·Ö±È  
+          DecimalFormat df = new DecimalFormat("0.00%");//ï¿½ï¿½ï¿½Ò»ï¿½ï¿½DecimalFormatï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+          NumberFormat nf = NumberFormat.getNumberInstance();//ï¿½ï¿½ï¿½Ò»ï¿½ï¿½NumberFormatï¿½ï¿½ï¿½ï¿½  
+          StandardPieSectionLabelGenerator sp1 = new StandardPieSectionLabelGenerator("{0}  {2}", nf, df);//ï¿½ï¿½ï¿½StandardPieSectionLabelGeneratorï¿½ï¿½ï¿½ï¿½  
+          pieplot.setLabelGenerator(sp1);//ï¿½ï¿½ï¿½Ã±ï¿½Í¼ï¿½ï¿½Ê¾ï¿½Ù·Ö±ï¿½  
         
-      //Ã»ÓĞÊı¾İµÄÊ±ºòÏÔÊ¾µÄÄÚÈİ  
-          pieplot.setNoDataMessage("ÎŞÊı¾İÏÔÊ¾");  
+      //Ã»ï¿½ï¿½ï¿½ï¿½ï¿½İµï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+          pieplot.setNoDataMessage("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾");  
           pieplot.setCircular(false);  
           pieplot.setLabelGap(0.02D);  
         
-          pieplot.setIgnoreNullValues(true);//ÉèÖÃ²»ÏÔÊ¾¿ÕÖµ  
-          pieplot.setIgnoreZeroValues(true);//ÉèÖÃ²»ÏÔÊ¾¸ºÖµ  
+          pieplot.setIgnoreNullValues(true);//ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Öµ  
+          pieplot.setIgnoreZeroValues(true);//ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Öµ  
           frame1=new ChartPanel (chart,true);  
-          chart.getTitle().setFont(new Font("ËÎÌå",Font.BOLD,20));//ÉèÖÃ±êÌâ×ÖÌå  
-          PiePlot piePlot= (PiePlot) chart.getPlot();//»ñÈ¡Í¼±íÇøÓò¶ÔÏó  
-          piePlot.setLabelFont(new Font("ËÎÌå", 0, 12));//½â¾öÂÒÂë  
-          chart.getLegend().setItemFont(new Font("ºÚÌå",0,10)); 
+          chart.getTitle().setFont(new Font("ï¿½ï¿½ï¿½ï¿½",Font.BOLD,20));//ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+          PiePlot piePlot= (PiePlot) chart.getPlot();//ï¿½ï¿½È¡Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+          piePlot.setLabelFont(new Font("ï¿½ï¿½ï¿½ï¿½", 0, 12));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+          chart.getLegend().setItemFont(new Font("ï¿½ï¿½ï¿½ï¿½",0,10)); 
           frame1.setChart(chart);
           
     }  
     
     private static DefaultPieDataset getDataSet(int a, int b, int c, int d, int e) {  
         DefaultPieDataset dataset = new DefaultPieDataset();  
-        dataset.setValue("¿ÕÏĞ",a);  
-        dataset.setValue("Ê¹ÓÃÖĞ",b);  
-        dataset.setValue("Ëğ»µ",c);  
-        dataset.setValue("ĞŞÀíÖĞ",d);  
-        dataset.setValue("±¨·Ï",e);  
+        dataset.setValue("ç©ºé—²",a);  
+        dataset.setValue("Ê¹ä½¿ç”¨ä¸­",b);  
+        dataset.setValue("æŸå",c);  
+        dataset.setValue("ä¿®ç†ä¸­",d);  
+        dataset.setValue("æŠ¥åºŸ",e);  
         return dataset;  
     }  
     

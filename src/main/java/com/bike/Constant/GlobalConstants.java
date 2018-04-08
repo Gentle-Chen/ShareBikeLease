@@ -76,5 +76,10 @@ public final class GlobalConstants {
 		 *   reset password error code
 		 */
 	    public static final String identityCard_wrong = "40001";
+	    
+	    /**
+		 *   check money error code
+		 */
+	    public static final String not_enough_money = "50001";
 }
 	

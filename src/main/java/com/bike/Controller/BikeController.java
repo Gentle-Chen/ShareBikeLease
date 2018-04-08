@@ -1,5 +1,6 @@
 package com.bike.Controller;
 
+import java.awt.Font;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -245,7 +246,7 @@ public class BikeController {
 	}
 	
 	
-	 protected Map<String, String> getParams(HttpServletRequest request) {
+	 protected static Map<String, String> getParams(HttpServletRequest request) {
 	        Map<String, String> params = new HashMap<String, String>();
 	        Map<String, String[]> paramsMap = request.getParameterMap();
 	        Set<String> keySet = paramsMap.keySet();

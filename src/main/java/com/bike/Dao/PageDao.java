@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bike.Dto.Bike;
+import com.bike.Dto.Lease;
 import com.bike.Dto.Site;
 
 public interface PageDao {
@@ -19,6 +20,10 @@ public interface PageDao {
 	Long selectSiteTotalCount();
 	
 	List<Bike> countOtherBike(Map<String, Object> bikeMap);
+	
+	Long selectLeaseBikeTotalCount(int u_uuid);
+	
+	List<Lease> selectPageLeaseBike(Map<String,Object> pageMap);
 
 	
 

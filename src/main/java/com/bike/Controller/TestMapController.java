@@ -17,6 +17,8 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import com.bike.Utils.DrawUtil;
+import com.maxmind.geoip.Location;
+import com.maxmind.geoip.LookupService;
 
 @Controller
 public class TestMapController {
@@ -81,9 +83,9 @@ public class TestMapController {
 	
 	public static void main(String args[]){
 		
-		//String Ã¿´ÎÊµÀý»¯¶¼´´½¨ÐÂµÄ¶ÔÏó£¬ËùÒÔchangeº¯ÊýÀïµÄs1ºÍs2£¬²¢²»ÊÇ´«½øÈ¥µÄs1ºÍs2
+		//String Ã¿ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½changeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½s1ï¿½ï¿½s2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½È¥ï¿½ï¿½s1ï¿½ï¿½s2
 		
-		//StringbBuffer ÔÚchangeº¯ÊýÀïµÄÊÇs3ºÍs4£¬µ«s3=s4£¬¸³Öµºó²¢²»ÊÇs3¡£¡®=¡¯²Ù×÷²»ÊÇÕæÕýµÄ¸³Öµ£¬¶øappendÔòÊÇÕæµÄ¸³Öµ
+		//StringbBuffer ï¿½ï¿½changeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½s3ï¿½ï¿½s4ï¿½ï¿½ï¿½ï¿½s3=s4ï¿½ï¿½ï¿½ï¿½Öµï¿½ó²¢²ï¿½ï¿½ï¿½s3ï¿½ï¿½ï¿½ï¿½=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½Öµï¿½ï¿½ï¿½ï¿½appendï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½Öµ
 		
 //		String s1 = "a";
 //		String s2 = "b";
@@ -110,25 +112,26 @@ public class TestMapController {
 //		}
 //		System.out.println(b);
 		
-		BASE64Decoder decoder = new BASE64Decoder();
-    	byte[] emailbyte;
-		try {
-			emailbyte = decoder.decodeBuffer("MTA2Nzk1NTczNUBxcS5jb20=");
-			String outputStr = new String(emailbyte);  
-			System.out.println(outputStr);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	ByteBuffer b = null;
-		try {
-			b = decoder.decodeBufferToByteBuffer("MTA2Nzk1NTczNUBxcS5jb20=");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	b.toString();
-    	System.out.println(b);
+//		BASE64Decoder decoder = new BASE64Decoder();
+//    	byte[] emailbyte;
+//		try {
+//			emailbyte = decoder.decodeBuffer("MTA2Nzk1NTczNUBxcS5jb20=");
+//			String outputStr = new String(emailbyte);  
+//			System.out.println(outputStr);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	ByteBuffer b = null;
+//		try {
+//			b = decoder.decodeBufferToByteBuffer("MTA2Nzk1NTczNUBxcS5jb20=");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	b.toString();
+//    	System.out.println(b);
+		
 	}
 	
 	public static void change(String s1,String s2){

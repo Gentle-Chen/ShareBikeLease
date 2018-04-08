@@ -22,8 +22,6 @@ public class PageDaoImpl implements PageDao {
 	SqlSessionTemplate sqlSessionTemplate;
 	@Autowired
 	PageMapper pageMapper;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 	
 	public Long selectBikeTotalCount(String b_status) {
 		String statement = "com.bike.Mapper.BikeMapper.selectBikeTotalCount";
@@ -63,6 +61,20 @@ public class PageDaoImpl implements PageDao {
 		String statement = "com.bike.Mapper.SiteMapper.selectPageSite";
 		List<Site> site = sqlSessionTemplate.selectList(statement,pageMap);
 		return site;
+	}
+
+	@Override
+	public Long selectLeaseBikeTotalCount(int u_uuid) {
+		String statement = "com.bike.Mapper.LeaseMapper.selectLeaseBikeTotalCount";
+		Long totalCount = sqlSessionTemplate.selectOne(statement,u_uuid);
+		return totalCount;
+	}
+
+	@Override
+	public List<Lease> selectPageLeaseBike(Map<String, Object> pageMap) {
+		String statement = "com.bike.Mapper.LeaseMapper.selectPageLeaseBike";
+		List<Lease> lease = sqlSessionTemplate.selectList(statement,pageMap);
+		return lease;
 	}
 
 }

@@ -16,13 +16,104 @@
 	    <script src="/ShareBikeLease/js/quote/common.js"></script>
 	    <link rel="stylesheet" href="/ShareBikeLease/js/quote/layui/css/layui.css"  media="all">
 	    <script src="/ShareBikeLease/js/quote/layui/layui.js" charset="utf-8"></script>
+ 		<script src="/ShareBikeLease/js/bike.js" charset="utf-8"></script>
+		<script type="text/javascript">	
+		$(document).ready(function(){
+			pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page2");
+			$('#foot_page_div').html(pageStr);
+		});
+		
+		layui.use('layer', function(){ //独立版的layer无需执行这一句
+			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+			  //触发事件
+			  var active = {
+					  
+				  notice: function(){
+					  var b_uuid = $('#leaseBtn').val();
+						layer.open({
+						    time: 0 //不自动关闭
+						    ,title: '提示'
+						    ,area: '300px;'
+						    ,shade: [0.8, '#393D49']
+						    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">确定租赁？</div>'
+						    ,btn: ['确定', '取消']
+						    ,yes: function(index){
+						        $.ajax({
+						            url:getContextPath()+'/lease/'+b_uuid,
+						            data:b_uuid,
+						            type:"POST",
+						            dataType:"json",
+						            success:function(data){
+						            	if(data["result"] == "0" ){
+						            		layer.open({
+						            			title: '提示'
+						            			,area: '300px;'
+						            			,id: 'LAY_layuipro'
+						    					,btn: ['确定', '取消']
+						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">存在未结算订单，请先结算</div>'
+						            			,success: function(layero){
+						            				 var btn = layero.find('.layui-layer-btn');
+						            				 btn.find('.layui-layer-btn0').attr({
+						 					        	href : getContextPath()+'/user/order'
+						            				 });
+						            				}
+						            			});
+						            	}else{
+						            		if ( data["result"] == "00000" ){
+							            		layer.open({
+							            			title: '提示'
+							            			,area: '300px;'
+							            			,id: 'LAY_layuipro'
+							    					,btn: ['确定', '取消']
+							            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">租赁成功，已开始计时</div>'
+							            			,success: function(layero){
+							            				 var btn = layero.find('.layui-layer-btn');
+							            				 btn.find('.layui-layer-btn0').attr({
+							 					        	href : getContextPath()+'/user/order'
+							            				 });
+							            				}
+							            			});
+							           			 }else{
+							           				layer.open({
+								            			title: '提示'
+								            			,area: '300px;'
+								            			,id: 'LAY_layuipro'
+								    					,btn: ['确定', '取消']
+								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">余额不足，请充值</div>'
+								            			,success: function(layero){
+								            				 var btn = layero.find('.layui-layer-btn');
+								            				 btn.find('.layui-layer-btn0').attr({
+								 					        	href : getContextPath()+'/user/recharge'
+								            				 });
+								            				}
+								            			});
+							           				 }
+						            	}
+						            	
+						           			 }
+						       			  });
+						   				 }
+									});
+				    			},
+			  
+			 	   		}
+			  
+				  $('#leaseBtn').on('click', function(){
+					    var othis = $(this), method = othis.data('method');
+					    active[method] ? active[method].call(this, othis) : '';
+					  });
+				  
+			});
+		 
+		</script>
 		<style type="text/css">
-		    html,body{margin:0;padding:0;}
-		    .iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
-		    .iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+			th {text-align: center;}
+			.read-protocol-modal p{
+			    line-height: 20px;
+			    text-align:left;
+			}
 		</style>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
-</head>
+	</head>
 
 <body>
   <!--百度地图容器-->
@@ -37,161 +128,91 @@
 			  	<div class="row">
 			  		<div class="col-md-2">
 			  		   <jsp:include page="/WEB-INF/views/user/userLeftMenu.jsp" flush="true" >	
-			  		   		<jsp:param value="#" name="action" />
+			  		   		<jsp:param value="location" name="action" />
 			  		   	</jsp:include>
 			  		</div>
-			  		<div style="width:697px;height:550px;border:#ccc solid 1px;" id="dituContent"></div>
+  					  当前位置为:${province}/${city}/香洲区/北京理工大学珠海学院/弘毅楼(<a href="location1">地图</a>)<br>
+  					  周围有2个单车站点
+  					  <div class="col-md-10 l-b">
+			  			<form class="form-horizontal" method="post" action="${ctx}/user/location" id="locationForm">
+	  						<div class="form-group">
+	                          <label class="col-sm-2 control-label" style="width:100px;">站点筛选：</label>
+	                          	 <select id="b_status" name="b_status" class="col-sm-2" style="height:35px;width:100px">
+	                          	 	<option value="" <c:if test="${site==''}">selected</c:if>>请选择</option>
+	                          	 	<option value="2" <c:if test="${site=='2'}">selected</c:if>>弘毅楼</option>
+	                          	 	<option value="4" <c:if test="${site=='4'}">selected</c:if>>明德楼</option>
+	                          	 </select>
+							<label class="col-sm-2 control-label" style="width:100px;"></label>
+							  <div class="col-sm-2 text-center">
+	                       		<button type="button" class="btn btn-success" onclick="submit()">搜索</button>
+							   </div>
+	                       </div>
+						</form>
+				  		<table class="table table-striped table-bordered table-hover">
+				  			<thead>
+								<tr>
+									<th>单车编号</th>
+									<th>单车状态</th>
+									<th>停靠站点</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody style="text-align:center">
+							<c:forEach items="${item.listObject}" var="bike" >
+				  				<tr>
+				  					<td>${bike.b_id}</td>
+				  					<td>
+										<c:if test="${bike.b_status == '0' }">空闲
+										</c:if>
+										<c:if test="${bike.b_status == '1' }">使用中
+										</c:if>
+										<c:if test="${bike.b_status == '2' }">损坏
+										</c:if>
+										<c:if test="${bike.b_status == '3' }">修理中
+										</c:if>
+										<c:if test="${bike.b_status == '4' }">闲置
+										</c:if>
+										<c:if test="${bike.b_status == '5' }">报废
+										</c:if>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${bike.site.getS_uuid() == '1' }">--
+											</c:when>
+											<c:otherwise>
+												${bike.site.getS_name()}
+											</c:otherwise>
+										</c:choose>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${bike.b_status == '0' }">
+												<button id="leaseBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  style="background: blue;border-color:blue ">
+													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+														租赁
+												</button>
+											</c:when>
+											<c:otherwise>--</c:otherwise>
+										</c:choose>
+									</td>
+				  				</tr>
+				  			</c:forEach>
+				  			</tbody>
+				  		 </table>
+				  		 
+	                    <div class="row">
+	                        <nav class="right-block">
+							  	<ul class="pagination" id="foot_page_div"></ul>
+							</nav>
+						</div>
+			  		</div>
   				</div>
-  				 
 			  </div>
-			 
 		     </div>
-		     
 	       </div>
        </div>
+
   
 </body>
-<script type="text/javascript">
 
-	$(document).ready(function(){
-		pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page");
-		$('#foot_page_div').html(pageStr);
-	});
-
-    //创建和初始化地图函数：
-    function initMap(){
-        createMap();//创建地图
-        setMapEvent();//设置地图事件
-        addMapControl();//向地图添加控件
-        addRemark();//向地图中添加文字标注
-        displayPOI();
-    }
-    
-    //创建地图函数：
-    function createMap(){
-        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
-        var point = new BMap.Point(113.543494,22.370807);//定义一个中心点坐标   
-        map.centerAndZoom(point,16);//设定地图的中心点和坐标并将地图显示在地图容器中
-        window.map = map;//将map变量存储在全局
-    }
-    
-    //地图事件设置函数：
-    function setMapEvent(){
-        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
-        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
-        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
-        map.enableKeyboard();//启用键盘上下左右键移动地图
-    }
-    
-    //地图控件添加函数：
-    function addMapControl(){
-        //向地图中添加缩放控件
-	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
-	map.addControl(ctrl_nav);
-        //向地图中添加缩略图控件
-	var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1});
-	map.addControl(ctrl_ove);
-        //向地图中添加比例尺控件
-	var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
-	map.addControl(ctrl_sca);
-    }
-    
-    var content = '<div id="content" style="display:none"><table border="1"><thead><tr>'+
-    					'<td>单车编号 </td>'+
-    					'<td>单车状态 </td></tr></thead>'+
-    					'<tbody><e:forEach items="${requestScope.Bike }" var="bike"><tr>'+
-    					'<td>${bike.b_uuid}</td>'+
-    					'<td>${bike.b_status}</td>'+
-    			'</tr></e:forEach></tbody></table>'+
-    			' <div class="row">'+
-	                        '<nav class="right-block">'+
-							  	'<ul class="pagination" id="foot_page_div"></ul>'+
-							'</nav>'+
-						'</div></div>';
-    
-    
-	//文字标注数组
-    var lbPoints = [{title:"弘毅楼",point:"113.54593|22.374182",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ,{title:"求是楼",point:"113.538258|22.374875",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ,{title:"明德楼",point:"113.545687|22.369344",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ];
-    //向地图中添加文字标注函数
-    function addRemark(){
-        for(var i=0;i<lbPoints.length;i++){
-            var json = lbPoints[i];
-            var p1 = json.point.split("|")[0];
-            var p2 = json.point.split("|")[1];
-            var point = new BMap.Point(p1,p2);
-			var iconImg = createIcon(json.icon);
-            var marker = new BMap.Marker(point,{icon:iconImg});
-			var iw = createInfoWindow(i);
-            var label = new BMap.Label("<div style='padding:2px;'><a href='javascript:void(0)' onclick='test()'>"+json.content+"</a></div>",{point:new BMap.Point(p1,p2),offset:new BMap.Size(3,-6)});
-            marker.setLabel(label);
-            map.addOverlay(marker);
-//             map.addOverlay(label);
-            label.setStyle({
-                borderColor:"#808080",
-                color:"#333",
-                cursor:"pointer"
-    		});
-	
-			(function(){
-				var index = i;
-				var _iw = createInfoWindow(i);
-				var _marker = marker;
-				_marker.addEventListener("click",function(){
-					$.ajax({
-						
-					});
-				    this.openInfoWindow(_iw);
-				    $("#content").css("display","inline");
-			    });
-			    _iw.addEventListener("open",function(){
-				    _marker.getLabel().hide();
-			    })
-			    _iw.addEventListener("close",function(){
-			    	$("#content").css("display","none");
-				    _marker.getLabel().show();
-			    })
-				label.addEventListener("click",function(){
-				    _marker.openInfoWindow(_iw);
-			    })
-				if(!!json.isOpen){
-					label.hide();
-					_marker.openInfoWindow(_iw);
-				}
-			})()
-        }
-    }
-    
-    //画圆
-    function displayPOI(){
-		var pointCenter = map.getCenter();
-	    //创建圆对象
-	    var circle = new BMap.Circle(pointCenter, 500, {
-	        strokeColor: "red",
-	        strokeWeight: 1,
-	        fillColor: 1,
-// 	        fillOpacity: 0.6
-	    });
-	    map.addOverlay(circle);
-	}
-    
-  //创建InfoWindow
-    function createInfoWindow(i){
-        var json = lbPoints[i];
-        var iw = new BMap.InfoWindow("<b class='iw_poi_title' title='" + json.title + "'>" + json.title + "</b><div class='iw_poi_content'>"+json.content+"</div>");
-        return iw;
-    }
-    //创建一个Icon
-    function createIcon(json){
-        var icon = new BMap.Icon("http://api.map.baidu.com/img/markers.png",
-        		new BMap.Size(json.w,json.h),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)})
-        return icon;
-    }
-    
-   //创建和初始化地图
-   initMap(); 
-    
-</script>
 </html>

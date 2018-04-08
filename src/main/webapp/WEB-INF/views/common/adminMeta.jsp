@@ -4,7 +4,9 @@
 <link rel="stylesheet" type="text/css" href="/ShareBikeLease/css/v1.1/cnaacbs-theme.css" />
 <link href="/ShareBikeLease/css/v1.1/css.css" rel="stylesheet" type="text/css">
 <link href="/ShareBikeLease/css/v1.1/custom.css" rel="stylesheet" type="text/css">
+<link href="${ctx}/css/style2.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript" src="${ctx}/js/quote/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/ShareBikeLease/js/quote/modernizr.custom.js"></script>
 <script src="/ShareBikeLease/js/quote/jquery.js"></script>
 <script src="/ShareBikeLease/js/quote/cnaacbs.js"></script>

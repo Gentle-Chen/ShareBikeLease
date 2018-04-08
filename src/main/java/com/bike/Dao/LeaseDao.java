@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bike.Dto.Lease;
+import com.bike.Dto.Page;
 
 public interface LeaseDao {
 
@@ -14,5 +15,7 @@ public interface LeaseDao {
 	public List<Lease> getLeaseBikeByUUID(int l_uuid);
 	
 	public List<Lease> getLeaseBike(int u_uuid);
+	
+	public Page showLeaseBike(Map<String, Object> pageMap);
 	
 }

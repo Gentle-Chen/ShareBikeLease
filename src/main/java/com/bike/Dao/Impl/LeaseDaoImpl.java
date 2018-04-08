@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bike.Constant.GlobalConstants;
+import com.bike.Dao.BikeDao;
 import com.bike.Dao.LeaseDao;
+import com.bike.Dao.PageDao;
 import com.bike.Dto.Bike;
 import com.bike.Dto.Lease;
+import com.bike.Dto.Page;
 import com.bike.Dto.Site;
 
 @Repository
@@ -20,18 +23,24 @@ public class LeaseDaoImpl implements LeaseDao {
 	@Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 	
+	@Autowired
+	private PageDao pageDao;
+	
+	@Autowired
+	private BikeDao bikeDao;
+	
 	public int leaseBike(Map<String,Object> leaseMap) {
 		int l_uuid = 0;
-		String getBikeById = "com.bike.Mapper.BikeMapper.getBikeById";
-		String getSiteById = "com.bike.Mapper.BikeMapper.getSiteById";
+		String getBikeByUuid = "com.bike.Mapper.BikeMapper.getBikeByUuid";
+		String getSiteByUuid = "com.bike.Mapper.SiteMapper.getSiteByUuid";
 		String leaseBike = "com.bike.Mapper.LeaseMapper.leaseBike";
 		String updateBike = "com.bike.Mapper.LeaseMapper.updateBike_leaseBike";
 		String updateSite = "com.bike.Mapper.LeaseMapper.updateSite_leaseBike";
 		Map<String,Object> bikeMap = new HashMap<String,Object>();
 		String b_uuid = (String) leaseMap.get("b_uuid");
-		Bike bike = sqlSessionTemplate.selectOne(getBikeById, b_uuid);
+		Bike bike = sqlSessionTemplate.selectOne(getBikeByUuid, Integer.parseInt(b_uuid));
 		String s_uuid = bike.getSite().getS_uuid();
-		Site site = sqlSessionTemplate.selectOne(getSiteById, s_uuid);
+		Site site = sqlSessionTemplate.selectOne(getSiteByUuid, Integer.parseInt(s_uuid));
 		bikeMap.put("b_status",GlobalConstants.bike_using_status);
 		bikeMap.put("b_uuid",leaseMap.get("b_uuid"));
 		bikeMap.put("s_uuid",GlobalConstants.bike_using_nosite);
@@ -91,6 +100,22 @@ public class LeaseDaoImpl implements LeaseDao {
 	public void rollback(int l_uuid){
 		String statement = "com.bike.Mapper.LeaseMapper.deleteLeaseBike";
 		sqlSessionTemplate.delete(statement, l_uuid);
+	}
+
+	@Override
+	public Page showLeaseBike(Map<String, Object> pageMap) {
+		Long totalCount = pageDao.selectLeaseBikeTotalCount(Integer.parseInt(pageMap.get("u_uuid").toString()));
+		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
+		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
+        Page page = new Page(pageSize, totalCount.intValue());
+        page.setCurrentPage(pageNum);
+        int startNum = (page.getCurrentPage() - 1) * page.getPageSize();
+        pageMap.put("startNum", startNum);
+		List<Lease>  lease = pageDao.selectPageLeaseBike(pageMap);
+		Bike bike = bikeDao.getBikeByUuid(Integer.parseInt(lease.get(0).getBike().getB_uuid())).get(0);
+		lease.get(0).setBike(bike);
+		page.setListObject(lease);
+		return page;
 	}
 
 }

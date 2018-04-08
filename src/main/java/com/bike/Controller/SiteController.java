@@ -22,6 +22,7 @@ import com.bike.Dao.BikeDao;
 import com.bike.Dao.SiteDao;
 import com.bike.Dto.Bike;
 import com.bike.Dto.Page;
+import com.bike.Dto.Site;
 import com.bike.Helper.UserSessionHelper;
 
 @Controller
@@ -33,6 +34,15 @@ public class SiteController {
 	
 	@Autowired
 	private SiteDao siteDao;
+	
+	@RequestMapping(value="all",method=RequestMethod.GET)
+	@ResponseBody
+	public String getSiteToReturnBike(HttpServletRequest request ){
+		JSONObject json = new JSONObject();
+		List<Site> site = siteDao.getAllSite();
+		json.put("site", site);
+		return json.toJSONString();
+	}
 	
 	@RequestMapping(value="{s_uuid}",method=RequestMethod.GET)
 	public String getBikeBySite(HttpServletRequest request , @PathVariable int s_uuid){

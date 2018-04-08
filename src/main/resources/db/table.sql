@@ -70,6 +70,7 @@ create table b_lease
     l_returnTime varchar(255) ,
     l_money DECIMAL(8,2) not null default 0,
     l_status varchar(2) not null, -- 0代表未归还，1代表已归还
+    l_money_status varchar(2) not null default 0, -- 0代表未支付，1代表已支付
     u_uuid int not null,
     b_uuid int not null,
     foreign key (u_uuid) references b_user(u_uuid),

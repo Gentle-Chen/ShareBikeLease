@@ -1,7 +1,14 @@
 package com.bike.Controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,19 +19,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
+import com.bike.Dao.BikeDao;
+import com.bike.Dao.LeaseDao;
 import com.bike.Dao.UserDao;
+import com.bike.Dto.Lease;
+import com.bike.Dto.Page;
 import com.bike.Dto.User;
 import com.bike.Helper.UserSessionHelper;
 import com.bike.Thread.AuditResultEmailThread;
 import com.bike.Utils.ApplicationUtil;
+import com.bike.Utils.CommonUtil;
+
+import sun.misc.BASE64Decoder;
 
 @Controller
 @RequestMapping(value="user/")
@@ -32,6 +44,12 @@ public class UserController {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private BikeDao bikeDao;
+	
+	@Autowired
+	private LeaseDao leaseDao;
 	
 	@RequestMapping(value="/toRegist")
 	public String toRegist(){
@@ -162,11 +180,121 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="location")
-	public ModelAndView location(HttpServletRequest request) {
+	public ModelAndView location(@RequestParam(required = false, defaultValue = "1")
+    int pageNum, @RequestParam(required = false, defaultValue = "2")
+    int pageSize, HttpServletRequest request) {
+		String ip = getClientIp(request);
+		
+		String json = getIPXY(null);
+        JSONObject obj = JSONObject.parseObject(json);
+        String province = obj.getJSONObject("content").getJSONObject("address_detail").get("province").toString();
+        String city = obj.getJSONObject("content").getJSONObject("address_detail").get("city").toString();
+        String x = obj.getJSONObject("content").getJSONObject("point").get("x").toString();
+        String y = obj.getJSONObject("content").getJSONObject("point").get("y").toString();
+        
+		String aa = "113.543494,22.370807";
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
 		ModelAndView mv = new ModelAndView("user/location");
 		mv.addObject("User",user);
+		mv.addObject("province",province);
+		mv.addObject("city",city);
+		mv.addObject("x",x);
+		mv.addObject("y",y);
+		
+		Map<String, String> params = CommonUtil.getParams(request);
+        String s_uuid = params.get("site");
+        
+        mv.addObject("site", s_uuid);
+		
+        
+        Map<String,Object> pageMap = new HashMap<String,Object>();
+        pageMap.put("pageNum", pageNum);
+		pageMap.put("pageSize", pageSize);
+		pageMap.put("b_status", GlobalConstants.bike_free_status);
+		pageMap.put("s_uuid", s_uuid);
+        
+		Page page = null;
+		page =  bikeDao.countOtherBike(pageMap);
+		
+		mv.addObject("item", page);
+		
+		return mv;
+	}
+	
+	public static String getIPXY(String ip) {
+		 
+		String ak = "vLqhOPGXX1Q8CqvTbvg3yL6QE5mCoIuM";
+		StringBuilder json = new StringBuilder();
+		if (null == ip) {
+			ip = "";
+		}
+		try {
+			URL url = new URL("http://api.map.baidu.com/location/ip?ak=" + ak
+			+ "&ip=" + ip + "&coor=bd09ll");
+			URLConnection urlConnection = url.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+            		urlConnection.getInputStream()));
+            String inputLine = null;
+            while ( (inputLine = in.readLine()) != null) {
+                json.append(inputLine);
+            }
+            in.close();
+        } catch (IOException e) {
+        }
+        return json.toString();
+	}
+	
+	/**
+	 * get client ip
+	 * @return IP address
+	 */
+	public String getClientIp(HttpServletRequest request){
+		String ipAddress = request.getHeader("x-forwarded-for");
+		
+		// if IP address is null
+		 if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+		 //get get Remote address
+			 ipAddress = request.getRemoteAddr();
+		 if(ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")){
+			 //get IP address by local host network adapter
+	         InetAddress inetAddress = null;
+	         try {
+	             	inetAddress = InetAddress.getLocalHost();
+		         } catch (UnknownHostException e) {
+		         }
+		         ipAddress = inetAddress.getHostAddress();
+		    }
+		 }
+		 
+		 //For multiple agents case, the first IP address is the actual IP address of client
+		 if(null != ipAddress && ipAddress.length() > 15){
+		     if(ipAddress.indexOf(",") > 0){
+		    	 ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+		     }
+		 }
+		 
+		 return ipAddress;
+	}
+	
+	@RequestMapping(value="order",method=RequestMethod.GET)
+	public ModelAndView ShowLeaseBike(@RequestParam(required = false, defaultValue = "1")
+    int pageNum, @RequestParam(required = false, defaultValue = "2")
+    int pageSize, HttpServletRequest request){
+		ModelAndView mv = new ModelAndView("user/order");
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		mv.addObject("User",user);
+        
+        Map<String,Object> pageMap = new HashMap<String,Object>();
+        pageMap.put("pageNum", pageNum);
+		pageMap.put("pageSize", pageSize);
+		pageMap.put("u_uuid", user.getU_uuid());
+        
+		Page page = null;
+		page =  leaseDao.showLeaseBike(pageMap);
+		
+		mv.addObject("item", page);
 		return mv;
 	}
 	

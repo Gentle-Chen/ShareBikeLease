@@ -1,5 +1,6 @@
 package com.bike.Dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.bike.Dto.Page;
@@ -12,5 +13,9 @@ public interface SiteDao {
 	
 	public Page getAllSiteByPage(Map<String,Object> pageMap);
 	
+	public List<Site> getAllSite();
+	
 	
 }
+
+

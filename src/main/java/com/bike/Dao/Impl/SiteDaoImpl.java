@@ -41,5 +41,12 @@ public class SiteDaoImpl implements SiteDao{
 		return page;
 	}
 
+	@Override
+	public List<Site> getAllSite() {
+		String statement = "com.bike.Mapper.SiteMapper.getAllSite";
+		List<Site> site = sqlSessionTemplate.selectList(statement);
+		return site;
+	}
+
 	
 }

@@ -24,5 +24,9 @@
 			 select *  from b_site where s_uuid != 1  limit ${startNum},${pageSize}
 		</select>
      
+     <select id="getAllSite"  resultMap="SiteMap">
+			select * from b_site where s_uuid != 1
+		</select>
+     
  </mapper>
  

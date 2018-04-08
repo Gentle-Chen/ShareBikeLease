@@ -36,6 +36,9 @@ $(document).ready(function(){
 	$('#launchBtn').click(launch);
 	
 	$('#addBtn').click(addBike);
+	
+	
+	$('#siteSelect').mouseleave(checkSiteForReturnBike);
 });
 
 
@@ -70,6 +73,71 @@ function leaseBike(u_uuid,b_uuid){
 	        }
 	    });
 }
+
+function returnBike_getSite(l_uuid,b_uuid){
+	$("#l_uuid").val(l_uuid);
+	$("#b_uuid").val(b_uuid);
+	 $.ajax({
+	        timeout: 3000,
+	        async: false,
+	        type: "GET",
+	        dataType:"json",
+	        url: getContextPath()+'/site/all',
+	        success: function (data) {
+	        	console.log(data.site);
+	        	var list = new Array();
+	        	list = data.site;
+	        	for(i=0;i<list.length;i++){
+	        		$("#siteSelect").append('<option value='+list[i].s_uuid+','+list[i].s_capacity+'>'+list[i].s_name+'</option>');
+	        	}
+	        },
+	 		error:function (data) {
+	 			alert("fail");
+	        }
+	    });
+}
+function checkSiteForReturnBike(){
+	 var value = $("#siteSelect").val();
+	 if(value == "0"){
+		 $("#siteNotEmpty").show();
+		 $("#siteError").hide();
+		 $("#returnBtn").attr({"disabled":"disabled"});
+	 }else{
+		 var capacity = value.split(",")[1];
+		 if(capacity == "0"){
+			 $("#siteError").show();
+			 $("#siteNotEmpty").hide();
+			 $("#returnBtn").attr({"disabled":"disabled"});
+		 }else{
+			 $("#siteError").hide();
+			 $("#siteNotEmpty").hide();
+			 $('#returnBtn').removeAttr("disabled"); 
+			 var s_uuid = value.split(",")[0];
+			 var b_uuid = $("#b_uuid").val();
+			 var l_uuid = $("#l_uuid").val();
+			 var returnMap = {
+					 "s_uuid":s_uuid,
+					 "b_uuid":b_uuid,
+					 "l_uuid":l_uuid
+			 };
+			 $.ajax({
+			        timeout: 3000,
+			        async: false,
+			        type: "POST",
+			        url: getContextPath()+'/lease/return',
+			        dataType: "json",
+			        contentType: "application/json; charset=utf-8",
+			        data:JSON.stringify(returnMap),
+			        success: function (data) {
+			        	if(data["result"] == "00000"){
+			        		window.location.href='user/order';
+			        	}
+			        }
+			    });
+		 }
+	 }
+}
+
 
 
 function pay() {
@@ -141,6 +209,21 @@ function page1(pageNum){
 	}
 	if (endTime != ""){
 		url = url + "&endTime=" + endTime;
+	}
+	if (site != ""){
+		url = url + "&site=" + site;
+	}
+	window.location = url;
+}
+
+function page2(pageNum){
+	var b_status = $.trim($("#b_status").val());
+	var startTime = $.trim($("#startTime").val());
+	var endTime = $.trim($("endTime").val());
+	var site = $.trim($("#site").val());
+	var url = getContextPath() + "/user/location/?pageNum=" + pageNum;
+	if (b_status != ""){
+		url = url + "&b_status=" + b_status;
 	}
 	if (site != ""){
 		url = url + "&site=" + site;
@@ -284,3 +367,5 @@ function addBike() {
 //		bike_flag = true;
 //	}
 //}
+
+

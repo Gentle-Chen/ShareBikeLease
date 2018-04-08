@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<%@ include file="/WEB-INF/views/common/adminMeta.jsp" %>
 		<title>用户中心</title>
 <!-- 		<script type="text/javascript" src="/ShareBikeLease/js/quote/jquery-3.2.1.min.js"></script> -->
@@ -48,23 +48,23 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body style="overflow-x: auto">
 		
 	<jsp:include page="/WEB-INF/views/common/adminHead.jsp" flush="true" >
 		<jsp:param value="userCenter" name="action"/>
 	</jsp:include>
 
-	 <div class="row cnaac-bg">
+	 <div class="row cnaac-bg" >
 		<div class="container cnaac-bgw not-padding space-p-box space-p-bottom">
-			<div class="tab-content">
-			  <div role="tabpanel" class="tab-pane active" id="tab-one">
-			  	<div class="row">
-			  		<div class="col-md-2">
+			<div class="tab-content" >
+			  <div role="tabpanel" class="tab-pane active" id="tab-one" >
+			  	<div class="row" ">
+			  		<div class="col-md-2" style="">
 			  		   <jsp:include page="/WEB-INF/views/admin/leftMenu.jsp" flush="true" >
 			  		   	<jsp:param value="bikeTotal" name="action"/>
 			  		   	</jsp:include>
 			  		</div>
-			  		<div class="col-md-10 l-b">
+			  		<div class="col-md-10 l-b" >
 			  			<form class="form-horizontal" method="post" action="${ctx}/bike/get" id="myform">
 	  						<div class="form-group">
 	                          <label class="col-sm-2 control-label" style="width:100px;">单车状态：</label>

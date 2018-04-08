@@ -12,6 +12,8 @@ public class Lease {
 	
 	private String l_status;
 	
+	private String l_money_status;
+	
 	private User user;
 	
 	private Bike bike;
@@ -71,6 +73,14 @@ public class Lease {
 
 	public void setBike(Bike bike) {
 		this.bike = bike;
+	}
+
+	public String getL_money_status() {
+		return l_money_status;
+	}
+
+	public void setL_money_status(String l_money_status) {
+		this.l_money_status = l_money_status;
 	}
 	
 	

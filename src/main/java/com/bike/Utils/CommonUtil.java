@@ -5,8 +5,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 public class CommonUtil {
 	/**
@@ -99,5 +105,20 @@ public class CommonUtil {
 	public static String bigDecimalToString(BigDecimal curBigDecimal){
 		return curBigDecimal.toString();
 	}
+	
+	 public static Map<String, String> getParams(HttpServletRequest request) {
+	        Map<String, String> params = new HashMap<String, String>();
+	        Map<String, String[]> paramsMap = request.getParameterMap();
+	        Set<String> keySet = paramsMap.keySet();
+	        for (String key : keySet) {
+	            String[] values = (String[]) paramsMap.get(key);
+	            if (1 == values.length) {
+	                params.put(key, StringUtils.trim(values[0]));
+	            } else if (values.length > 1) {
+	                params.put(key, StringUtils.join(values, ","));
+	            }
+	        }
+	        return params;
+	    }
 
 }

@@ -118,21 +118,32 @@
 									</td>
 									<td>${site.s_capacity }</td>
 									<td>
-										<c:choose>
-											<c:when test="${site.s_capacity == '10' }">
-												<button  id="deleteSiteBtn" value="${site.s_uuid }" data-method="notice_delete" class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f ">
-													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-													删除
-												</button>
-											</c:when>	
-											<c:otherwise>	
-												<button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal" 
+<%-- 										<c:choose> --%>
+											<button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal" 
 												  onclick="detail('${site.s_uuid}','${site.s_name }')" id="${site.s_uuid}" data-target=".edit-app-modal" aria-expanded="false">
 	                                               	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 	                                                	详情
 	                                             </button>
-											</c:otherwise>
-										</c:choose>
+	                                             <c:if test="${site.s_capacity == '10' }"> 
+	 												<button  id="deleteSiteBtn" value="${site.s_uuid }" data-method="notice_delete" class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f "> 
+	 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 
+	 													删除 
+													</button> 
+	 											</c:if>
+<%-- 											<c:when test="${site.s_capacity == '10' }"> --%>
+<%-- 												<button  id="deleteSiteBtn" value="${site.s_uuid }" data-method="notice_delete" class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f "> --%>
+<!-- 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
+<!-- 													删除 -->
+<!-- 												</button> -->
+<%-- 											</c:when>	 --%>
+<%-- 											<c:otherwise>	 --%>
+<!-- 												<button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal"  -->
+<%-- 												  onclick="detail('${site.s_uuid}','${site.s_name }')" id="${site.s_uuid}" data-target=".edit-app-modal" aria-expanded="false"> --%>
+<!-- 	                                               	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
+<!-- 	                                                	详情 -->
+<!-- 	                                             </button> -->
+<%-- 											</c:otherwise> --%>
+<%-- 										</c:choose> --%>
 									</td>
 				  				</tr>
 				  			</c:forEach>

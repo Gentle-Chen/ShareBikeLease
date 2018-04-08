@@ -52,6 +52,18 @@
      	update b_user set u_password = #{u_password} where u_email = #{u_email}
      </update>
      
+     <select id="checkMoney" parameterType="java.util.HashMap"  resultMap="UserMap">
+         select * from b_user 
+         <where>
+         	u_uuid = #{u_uuid} 
+         	<if test="money != 0">
+					and u_balance &gt;= #{money}
+			</if>
+			<if test="money == 0">
+					and u_balance &gt; #{money}
+			</if>
+         </where> 
+     </select>
      
  </mapper>
  

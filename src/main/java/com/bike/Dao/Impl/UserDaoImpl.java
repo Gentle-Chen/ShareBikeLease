@@ -82,5 +82,15 @@ public class UserDaoImpl implements UserDao{
 		String statement = "com.bike.Mapper.UserMapper.resetPassword";
 		sqlSessionTemplate.update(statement,map);
 	}
+
+	@Override
+	public User checkMoney(int u_uuid, double money) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("u_uuid", u_uuid);
+		map.put("money", money);
+		String statement = "com.bike.Mapper.UserMapper.checkMoney";
+		User user = sqlSessionTemplate.selectOne(statement,map);
+		return user;
+	}
 	
 }

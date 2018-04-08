@@ -89,7 +89,7 @@
      <update id="returnBike" parameterType="java.util.HashMap">
 		update b_lease
     		<set>
-    			l_status = #{l_status} , l_returnTime = #{l_returnTime} , l_money = #{l_money}
+    			l_status = #{l_status} , l_returnTime = #{l_returnTime} ,l_money = #{l_money} 
     		</set>
     		where l_uuid = #{l_uuid}
      </update>
@@ -118,6 +118,13 @@
      	select * from b_lease  where u_uuid = #{u_uuid}
      </select>
      
+     <select id="selectLeaseBikeTotalCount" resultType="Long" parameterType="int">
+		select count(*) from b_lease where u_uuid = #{u_uuid}
+	  </select>
+	  
+	  <select id="selectPageLeaseBike" parameterType="java.util.HashMap" resultMap="LeaseMap">
+		 select *  from b_lease where u_uuid = #{u_uuid}  limit ${startNum},${pageSize}
+		</select>
      
  </mapper>
  
