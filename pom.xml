@@ -153,11 +153,11 @@
 			<artifactId>log4j-web</artifactId>
 			<version>2.1</version>
 		</dependency>
-		<dependency> <!-- 桥接：告诉commons logging使用Log4j2 -->
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-jcl</artifactId>
-			<version>2.7</version>
-		</dependency>
+<!-- 		<dependency> 桥接：告诉commons logging使用Log4j2 -->
+<!-- 			<groupId>org.apache.logging.log4j</groupId> -->
+<!-- 			<artifactId>log4j-jcl</artifactId> -->
+<!-- 			<version>2.7</version> -->
+<!-- 		</dependency> -->
 		
 		<!-- send email -->
 		<dependency>
@@ -196,12 +196,12 @@
 		<dependency>
 		    <groupId>org.quartz-scheduler</groupId>
 		    <artifactId>quartz</artifactId>
-		    <exclusions>  
-                    <exclusion>  
-                        <groupId>org.slf4j</groupId>  
-                        <artifactId>slf4j-api</artifactId>  
-                    </exclusion>  
-                </exclusions>  
+<!-- 		    <exclusions>   -->
+<!--                     <exclusion>   -->
+<!--                         <groupId>org.slf4j</groupId>   -->
+<!--                         <artifactId>slf4j-api</artifactId>   -->
+<!--                     </exclusion>   -->
+<!--                 </exclusions>   -->
 		    <version>2.2.1</version>
 		</dependency>
 		

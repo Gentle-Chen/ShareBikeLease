@@ -1,5 +1,6 @@
 package com.bike.Dao;
 
+import com.bike.Dto.Deposit;
 import com.bike.Dto.User;
 
 public interface UserDao {
@@ -20,5 +21,6 @@ public interface UserDao {
 	
 	public User checkMoney(int u_uuid,double money);
 	
+	public Deposit checkDeposit(int u_uuid);
 	
 }

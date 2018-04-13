@@ -53,9 +53,9 @@ create table b_bike
     s_uuid int not null, -- 1代表在使用中,没有停靠站点.其他则代表站点ID 
 	foreign key (s_uuid) references b_site(s_uuid)
 );
--- insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
--- insert into b_bike values ('3','003','4','2');insert into b_bike values ('4','004','0','2');
--- insert into b_bike values ('5','0','3');insert into b_bike values ('6','0','3');
+ insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
+ insert into b_bike values ('3','003','4','2');insert into b_bike values ('4','004','0','2');
+ -- insert into b_bike values ('5','0','3');insert into b_bike values ('6','0','3');
 -- delete from b_bike;
 -- select * from b_bike  where b_status != 1;
 -- select count(*) from b_bike where s_uuid = '3';

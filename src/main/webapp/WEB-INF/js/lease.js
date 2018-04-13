@@ -106,3 +106,29 @@ function detail(s_uuid,s_name){
     });
 }
 
+
+function returnBike(){
+	var l_uuid = $("#l_uuid").val();
+	var b_uuid = $("#b_uuid").val();
+	var siteSelect = $("siteSelect").val();
+	var s_uuid = value.split(",")[0];
+	 var returnMap = {
+			 "s_uuid":s_uuid,
+			 "b_uuid":b_uuid,
+			 "l_uuid":l_uuid
+	 };
+	 $.ajax({
+	        timeout: 3000,
+	        async: false,
+	        type: "POST",
+	        url: getContextPath()+'/lease/return',
+	        dataType: "json",
+	        contentType: "application/json; charset=utf-8",
+	        data:JSON.stringify(returnMap),
+	        success: function (data) {
+	        	if(data["result"] == "00000"){
+	        		window.location.href='user/order';
+	        	}
+	        }
+	    });
+}

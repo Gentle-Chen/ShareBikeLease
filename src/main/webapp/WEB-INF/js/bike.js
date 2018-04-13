@@ -112,28 +112,28 @@ function checkSiteForReturnBike(){
 			 $("#siteError").hide();
 			 $("#siteNotEmpty").hide();
 			 $('#returnBtn').removeAttr("disabled"); 
-			 var s_uuid = value.split(",")[0];
-			 var b_uuid = $("#b_uuid").val();
-			 var l_uuid = $("#l_uuid").val();
-			 var returnMap = {
-					 "s_uuid":s_uuid,
-					 "b_uuid":b_uuid,
-					 "l_uuid":l_uuid
-			 };
-			 $.ajax({
-			        timeout: 3000,
-			        async: false,
-			        type: "POST",
-			        url: getContextPath()+'/lease/return',
-			        dataType: "json",
-			        contentType: "application/json; charset=utf-8",
-			        data:JSON.stringify(returnMap),
-			        success: function (data) {
-			        	if(data["result"] == "00000"){
-			        		window.location.href='user/order';
-			        	}
-			        }
-			    });
+//			 var s_uuid = value.split(",")[0];
+//			 var b_uuid = $("#b_uuid").val();
+//			 var l_uuid = $("#l_uuid").val();
+//			 var returnMap = {
+//					 "s_uuid":s_uuid,
+//					 "b_uuid":b_uuid,
+//					 "l_uuid":l_uuid
+//			 };
+//			 $.ajax({
+//			        timeout: 3000,
+//			        async: false,
+//			        type: "POST",
+//			        url: getContextPath()+'/lease/return',
+//			        dataType: "json",
+//			        contentType: "application/json; charset=utf-8",
+//			        data:JSON.stringify(returnMap),
+//			        success: function (data) {
+//			        	if(data["result"] == "00000"){
+//			        		window.location.href='user/order';
+//			        	}
+//			        }
+//			    });
 		 }
 	 }
 }

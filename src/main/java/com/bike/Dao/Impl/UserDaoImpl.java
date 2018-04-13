@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bike.Dao.UserDao;
+import com.bike.Dto.Deposit;
 import com.bike.Dto.User;
 
 @Repository
@@ -83,7 +84,6 @@ public class UserDaoImpl implements UserDao{
 		sqlSessionTemplate.update(statement,map);
 	}
 
-	@Override
 	public User checkMoney(int u_uuid, double money) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("u_uuid", u_uuid);
@@ -91,6 +91,13 @@ public class UserDaoImpl implements UserDao{
 		String statement = "com.bike.Mapper.UserMapper.checkMoney";
 		User user = sqlSessionTemplate.selectOne(statement,map);
 		return user;
+	}
+
+	@Override
+	public Deposit checkDeposit(int u_uuid) {
+		String statement = "com.bike.Mapper.UserMapper.checkDeposit";
+		Deposit deposit = sqlSessionTemplate.selectOne(statement,u_uuid);
+		return deposit;
 	}
 	
 }

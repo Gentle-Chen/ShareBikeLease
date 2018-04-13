@@ -63,14 +63,12 @@ public class PageDaoImpl implements PageDao {
 		return site;
 	}
 
-	@Override
 	public Long selectLeaseBikeTotalCount(int u_uuid) {
 		String statement = "com.bike.Mapper.LeaseMapper.selectLeaseBikeTotalCount";
 		Long totalCount = sqlSessionTemplate.selectOne(statement,u_uuid);
 		return totalCount;
 	}
 
-	@Override
 	public List<Lease> selectPageLeaseBike(Map<String, Object> pageMap) {
 		String statement = "com.bike.Mapper.LeaseMapper.selectPageLeaseBike";
 		List<Lease> lease = sqlSessionTemplate.selectList(statement,pageMap);

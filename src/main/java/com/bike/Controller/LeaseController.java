@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.LeaseDao;
 import com.bike.Dao.UserDao;
+import com.bike.Dto.Deposit;
 import com.bike.Dto.Lease;
 import com.bike.Dto.User;
 import com.bike.Helper.UserSessionHelper;
@@ -56,8 +56,12 @@ public class LeaseController {
 			}
 		}
 		User u = userDao.checkMoney(Integer.parseInt(user.getU_uuid()), 0);
-		if(u == null) {
-			json.put("result", GlobalConstants.not_enough_money);
+		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
+		if(deposit.getD_status().equals(GlobalConstants.deposit_no_pay)) {
+			json.put("result", GlobalConstants.deposit_no_pay);
+//		}
+//		if(u == null) {
+//			json.put("result", GlobalConstants.not_enough_money);
 		}else {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("b_uuid",b_uuid);
@@ -107,7 +111,7 @@ public class LeaseController {
 	
 	@RequestMapping(value="return",method=RequestMethod.POST)
 	@ResponseBody
-	public String returnBike(@RequestBody Map<String,Object> leaseMap) throws ParseException{
+	public String returnBike(@RequestBody Map<String,Object> leaseMap,HttpServletRequest request) throws ParseException{
 //		Map<String,Object> map = new HashMap<String,Object>();
 //		map.put("u_uuid",leaseMap.get("u_uuid"));//�޸��û����
 //		map.put("b_uuid",leaseMap.get("b_uuid"));//�޸ĵ���״̬
@@ -131,11 +135,24 @@ public class LeaseController {
 		leaseMap.put("l_status",GlobalConstants.lease_returned);
 		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
 		leaseMap.put("l_returnTime",returnTime);
-		String flag = leaseDao.returnBike(leaseMap);
-		if(flag.equals("yes")) {
-			json.put("result", GlobalConstants.success);
+		
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		if(money>=user.getU_balance()) {
+			json.put("result", GlobalConstants.not_enough_money);
 		}else {
-			
+//			List<Lease> userLease = leaseDao.getLeaseBike(Integer.parseInt(leaseMap.get("u_uuid").toString()));
+//			for(int i=0;i<userLease.size();i+ +) {
+//				if(userLease.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
+//					json.put("result", GlobalConstants.lease_no_return);
+//					return json.toJSONString();
+//				}
+//			}
+			String flag = leaseDao.returnBike(leaseMap);
+			if(flag.equals("yes")) {
+				json.put("result", GlobalConstants.success);
+			}else {
+				
+			}
 		}
 		return json.toJSONString();
 	}

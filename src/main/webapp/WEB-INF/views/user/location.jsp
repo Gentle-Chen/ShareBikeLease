@@ -79,7 +79,7 @@
 								            			,area: '300px;'
 								            			,id: 'LAY_layuipro'
 								    					,btn: ['确定', '取消']
-								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">余额不足，请充值</div>'
+								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚未缴纳押金，请先缴纳押金</div>'
 								            			,success: function(layero){
 								            				 var btn = layero.find('.layui-layer-btn');
 								            				 btn.find('.layui-layer-btn0').attr({

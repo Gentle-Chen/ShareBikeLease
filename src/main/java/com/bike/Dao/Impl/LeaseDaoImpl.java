@@ -102,7 +102,6 @@ public class LeaseDaoImpl implements LeaseDao {
 		sqlSessionTemplate.delete(statement, l_uuid);
 	}
 
-	@Override
 	public Page showLeaseBike(Map<String, Object> pageMap) {
 		Long totalCount = pageDao.selectLeaseBikeTotalCount(Integer.parseInt(pageMap.get("u_uuid").toString()));
 		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
@@ -112,8 +111,10 @@ public class LeaseDaoImpl implements LeaseDao {
         int startNum = (page.getCurrentPage() - 1) * page.getPageSize();
         pageMap.put("startNum", startNum);
 		List<Lease>  lease = pageDao.selectPageLeaseBike(pageMap);
-		Bike bike = bikeDao.getBikeByUuid(Integer.parseInt(lease.get(0).getBike().getB_uuid())).get(0);
-		lease.get(0).setBike(bike);
+		for(int i=0;i<lease.size();i++) {
+			Bike bike = bikeDao.getBikeByUuid(Integer.parseInt(lease.get(i).getBike().getB_uuid())).get(0);
+			lease.get(i).setBike(bike);
+		}
 		page.setListObject(lease);
 		return page;
 	}

@@ -13,6 +13,17 @@
 	    <result column="u_address" property="u_address" jdbcType="VARCHAR" />
 	    <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
   </resultMap>
+  
+  <resultMap id="DepositMap" type="com.bike.Dto.Deposit" >
+             <result column="d_status" property="d_status" jdbcType="VARCHAR" />
+         <association property="user" javaType="com.bike.Dto.User">
+             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
+             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+        </association>
+  </resultMap>
 	
 <!-- 	<sql id="Base_Column_List" > -->
 <!--     	id, name, password, sex, id_number, phone, address, balance -->
@@ -62,6 +73,13 @@
 			<if test="money == 0">
 					and u_balance &gt; #{money}
 			</if>
+         </where> 
+     </select>
+     
+     <select id="checkDeposit" parameterType="int"  resultMap="DepositMap">
+         select * from b_deposit 
+         <where>
+         	u_uuid = #{u_uuid} 
          </where> 
      </select>
      

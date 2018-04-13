@@ -17,8 +17,8 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import com.bike.Utils.DrawUtil;
-import com.maxmind.geoip.Location;
-import com.maxmind.geoip.LookupService;
+//import com.maxmind.geoip.Location;
+//import com.maxmind.geoip.LookupService;
 
 @Controller
 public class TestMapController {

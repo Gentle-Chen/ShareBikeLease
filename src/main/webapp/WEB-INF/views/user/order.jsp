@@ -24,6 +24,86 @@
 			$('#foot_page_div').html(pageStr);
 		});
 		
+		layui.use('layer', function(){ //独立版的layer无需执行这一句
+			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+			  //触发事件
+			  var active = {
+					  
+				  notice: function(){
+						layer.open({
+						    time: 0 //不自动关闭
+						    ,title: '提示'
+						    ,area: '300px;'
+						    ,shade: [0.8, '#393D49']
+						    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">确定归还？</div>'
+						    ,btn: ['确定', '取消']
+						    ,yes: function(index){
+						        $.ajax({
+						            url:getContextPath()+'/lease/'+b_uuid,
+						            data:b_uuid,
+						            type:"POST",
+						            dataType:"json",
+						            success:function(data){
+						            	if(data["result"] == "0" ){
+						            		layer.open({
+						            			title: '提示'
+						            			,area: '300px;'
+						            			,id: 'LAY_layuipro'
+						    					,btn: ['确定', '取消']
+						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">存在未结算订单，请先结算</div>'
+						            			,success: function(layero){
+						            				 var btn = layero.find('.layui-layer-btn');
+						            				 btn.find('.layui-layer-btn0').attr({
+						 					        	href : getContextPath()+'/user/order'
+						            				 });
+						            				}
+						            			});
+						            	}else{
+						            		if ( data["result"] == "00000" ){
+							            		layer.open({
+							            			title: '提示'
+							            			,area: '300px;'
+							            			,id: 'LAY_layuipro'
+							    					,btn: ['确定', '取消']
+							            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">租赁成功，已开始计时</div>'
+							            			,success: function(layero){
+							            				 var btn = layero.find('.layui-layer-btn');
+							            				 btn.find('.layui-layer-btn0').attr({
+							 					        	href : getContextPath()+'/user/order'
+							            				 });
+							            				}
+							            			});
+							           			 }else{
+							           				layer.open({
+								            			title: '提示'
+								            			,area: '300px;'
+								            			,id: 'LAY_layuipro'
+								    					,btn: ['确定', '取消']
+								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚未缴纳押金，请先缴纳押金</div>'
+								            			,success: function(layero){
+								            				 var btn = layero.find('.layui-layer-btn');
+								            				 btn.find('.layui-layer-btn0').attr({
+								 					        	href : getContextPath()+'/user/recharge'
+								            				 });
+								            				}
+								            			});
+							           				 }
+						            	}
+						            	
+						           			 }
+						       			  });
+						   				 }
+									});
+				    			},
+			  
+			 	   		}
+			  
+				  $('#returnBtn').on('click', function(){
+					    var othis = $(this), method = othis.data('method');
+					    active[method] ? active[method].call(this, othis) : '';
+					  });
+				  
+			});
 		 
 		</script>
 		<style type="text/css">
@@ -103,7 +183,7 @@
 											</a>
 <%-- 												<button id="returnBtn" value="${lease.bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  style="background: blue;border-color:blue "> --%>
 <!-- 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
-<!-- 														归还 -->
+<!-- 															归还 -->
 <!-- 												</button> -->
 											</c:when>
 											<c:otherwise>--</c:otherwise>
@@ -141,8 +221,8 @@
 									<div style="text-align: center;">
 										<div class="modal-body">
 										
-										<input type="text" id="l_uuid" value="" />
-										<input type="text" id="b_uuid" value="" />
+										<input type="hidden" id="l_uuid" value="" />
+										<input type="hidden" id="b_uuid" value="" />
                                             
 											<label class="label_one">站点:</label>
 												<SELECT id="siteSelect" name="siteSelect" style="display:inline;width:30%" class="form-control">
@@ -154,9 +234,11 @@
 										</div>
 									</div>
 									<div class="modal-footer ">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">close</button>
-										<input type="button"  class="form-control" value="确定归还" id="returnBtn" >
+<!-- 										<button type="button" class="btn btn-default" -->
+<!-- 											data-dismiss="modal">close</button> -->
+										<button id="returnBtn" value="${bike.b_uuid }" data-method="notice" 
+										class="btn btn-sm btn-success "  style="background: blue;border-color:blue "></button>
+										<input type="button" onclick="returnBike()"  class="form-control" value="确定归还" id="returnBtn" >
 									</div>
 								</div>
 							</form>
