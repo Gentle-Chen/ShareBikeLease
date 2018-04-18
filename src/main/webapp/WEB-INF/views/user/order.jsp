@@ -6,9 +6,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 		<%@ include file="/WEB-INF/views/common/adminMeta.jsp" %>
-		<title>当前位置</title>
+		<title>订单</title>
 <!-- 		<script type="text/javascript" src="/ShareBikeLease/js/quote/jquery-3.2.1.min.js"></script> -->
-		<link rel="stylesheet" type="text/css" href="/ShareBikeLease/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/ShareBikeLease/css/zzsc.css">
 		<link rel="stylesheet" type="text/css" href="/ShareBikeLease/css/webuploader.css">		
 		<link rel="stylesheet" href="/ShareBikeLease/css/pikaday.css">	
@@ -18,6 +17,7 @@
 	    <link rel="stylesheet" href="/ShareBikeLease/js/quote/layui/css/layui.css"  media="all">
 	    <script src="/ShareBikeLease/js/quote/layui/layui.js" charset="utf-8"></script>
  		<script src="/ShareBikeLease/js/bike.js" charset="utf-8"></script>
+ 		<script src="/ShareBikeLease/js/lease.js" charset="utf-8"></script>
 		<script type="text/javascript">	
 		$(document).ready(function(){
 			pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page2");
@@ -30,6 +30,17 @@
 			  var active = {
 					  
 				  notice: function(){
+					  	var l_uuid = $("#l_uuid").val();
+					 	var u_uuid = $("#u_uuid").val();
+						var b_uuid = $("#b_uuid").val();
+						var siteSelect = $("siteSelect").val();
+						var s_uuid = siteSelect.split(",")[0];
+						var returnMap = {
+								 "s_uuid":s_uuid,
+								 "b_uuid":b_uuid,
+								 "l_uuid":l_uuid,
+								 "u_uuid":u_uuid
+						 };
 						layer.open({
 						    time: 0 //不自动关闭
 						    ,title: '提示'
@@ -39,18 +50,21 @@
 						    ,btn: ['确定', '取消']
 						    ,yes: function(index){
 						        $.ajax({
-						            url:getContextPath()+'/lease/'+b_uuid,
-						            data:b_uuid,
-						            type:"POST",
-						            dataType:"json",
+						        	 timeout: 3000,
+						 	        async: false,
+						 	        type: "POST",
+						 	        url: getContextPath()+'/lease/return',
+						 	        dataType: "json",
+						 	        contentType: "application/json; charset=utf-8",
+						 	        data:JSON.stringify(returnMap),
 						            success:function(data){
-						            	if(data["result"] == "0" ){
+						            	if(data["result"] == "50001" ){
 						            		layer.open({
 						            			title: '提示'
 						            			,area: '300px;'
 						            			,id: 'LAY_layuipro'
 						    					,btn: ['确定', '取消']
-						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">存在未结算订单，请先结算</div>'
+						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">金额不足，支付失败，请前往充值</div>'
 						            			,success: function(layero){
 						            				 var btn = layero.find('.layui-layer-btn');
 						            				 btn.find('.layui-layer-btn0').attr({
@@ -59,13 +73,12 @@
 						            				}
 						            			});
 						            	}else{
-						            		if ( data["result"] == "00000" ){
 							            		layer.open({
 							            			title: '提示'
 							            			,area: '300px;'
 							            			,id: 'LAY_layuipro'
 							    					,btn: ['确定', '取消']
-							            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">租赁成功，已开始计时</div>'
+							            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">归还成功</div>'
 							            			,success: function(layero){
 							            				 var btn = layero.find('.layui-layer-btn');
 							            				 btn.find('.layui-layer-btn0').attr({
@@ -73,21 +86,6 @@
 							            				 });
 							            				}
 							            			});
-							           			 }else{
-							           				layer.open({
-								            			title: '提示'
-								            			,area: '300px;'
-								            			,id: 'LAY_layuipro'
-								    					,btn: ['确定', '取消']
-								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚未缴纳押金，请先缴纳押金</div>'
-								            			,success: function(layero){
-								            				 var btn = layero.find('.layui-layer-btn');
-								            				 btn.find('.layui-layer-btn0').attr({
-								 					        	href : getContextPath()+'/user/recharge'
-								            				 });
-								            				}
-								            			});
-							           				 }
 						            	}
 						            	
 						           			 }
@@ -97,11 +95,10 @@
 				    			},
 			  
 			 	   		}
-			  
-				  $('#returnBtn').on('click', function(){
-					    var othis = $(this), method = othis.data('method');
-					    active[method] ? active[method].call(this, othis) : '';
-					  });
+			  $('#returnBtn').on('click', function(){
+				    var othis = $(this), method = othis.data('method');
+				    active[method] ? active[method].call(this, othis) : '';
+				  });
 				  
 			});
 		 
@@ -176,15 +173,11 @@
 										<c:choose>
 											<c:when test="${lease.l_status == '0' }">
 											<a href="#return"  class="btn btn-sm btn-success "  style="background: blue;border-color:blue "
-												onclick="returnBike_getSite('${lease.l_uuid}','${lease.bike.b_uuid}')"
+												onclick="returnBike_getSite('${lease.l_uuid}','${lease.bike.b_uuid}','${User.u_uuid}')"
 												title="归还" data-toggle="modal">
 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 														归还
 											</a>
-<%-- 												<button id="returnBtn" value="${lease.bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  style="background: blue;border-color:blue "> --%>
-<!-- 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
-<!-- 															归还 -->
-<!-- 												</button> -->
 											</c:when>
 											<c:otherwise>--</c:otherwise>
 										</c:choose>
@@ -223,6 +216,7 @@
 										
 										<input type="hidden" id="l_uuid" value="" />
 										<input type="hidden" id="b_uuid" value="" />
+										<input type="hidden" id="u_uuid" value="" />
                                             
 											<label class="label_one">站点:</label>
 												<SELECT id="siteSelect" name="siteSelect" style="display:inline;width:30%" class="form-control">
@@ -236,9 +230,14 @@
 									<div class="modal-footer ">
 <!-- 										<button type="button" class="btn btn-default" -->
 <!-- 											data-dismiss="modal">close</button> -->
-										<button id="returnBtn" value="${bike.b_uuid }" data-method="notice" 
-										class="btn btn-sm btn-success "  style="background: blue;border-color:blue "></button>
-										<input type="button" onclick="returnBike()"  class="form-control" value="确定归还" id="returnBtn" >
+											<button id="returnBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  
+													style="background: blue;border-color:blue ">
+													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+														确定归还
+												</button>
+<%-- 										<button id="returnBtn" value="${bike.b_uuid }" data-method="notice"  --%>
+<!-- 										class="btn btn-sm btn-success "  style="background: blue;border-color:blue "></button> -->
+										<input type="button" onclick="returnBike()"   class="form-control" value="确定归还" id="returnBtn" >
 									</div>
 								</div>
 							</form>

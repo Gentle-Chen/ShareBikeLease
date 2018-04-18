@@ -28,5 +28,17 @@
 			select * from b_site where s_uuid != 1
 		</select>
      
+     <insert id="addSite" parameterType="com.bike.Dto.Site">
+     	insert into b_site(s_name,s_longitude,s_latitude,s_capacity) values (#{s_name},#{s_longitude}, #{s_latitude},10)
+     </insert>
+     
+     <update id="updateSite" parameterType="com.bike.Dto.Site">
+     	update b_site set s_name = #{s_name}
+     </update>
+     
+     <delete id="deleteSite" parameterType="com.bike.Dto.Site">
+     	delete from b_site where s_uuid = ${s_uuid}
+     </delete>
+     
  </mapper>
  

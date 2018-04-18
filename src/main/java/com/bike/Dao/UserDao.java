@@ -1,5 +1,7 @@
 package com.bike.Dao;
 
+import java.util.Map;
+
 import com.bike.Dto.Deposit;
 import com.bike.Dto.User;
 
@@ -22,5 +24,11 @@ public interface UserDao {
 	public User checkMoney(int u_uuid,double money);
 	
 	public Deposit checkDeposit(int u_uuid);
+	
+	public int recharge(User user);
+	
+	public int payDeposit(User user);
+	
+	public int returnDeposit(User user);
 	
 }

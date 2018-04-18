@@ -52,9 +52,10 @@ public class UserSessionHelper {
 	public static void userLogout(HttpSession httpSession){
 		if(httpSession.getAttribute("a_id") != null){
 			httpSession.removeAttribute("a_id");
+		}else {
+			httpSession.removeAttribute("id");
+			httpSession.removeAttribute("name");
 		}
-		httpSession.removeAttribute("id");
-		httpSession.removeAttribute("name");
 	}
 	
 	/**

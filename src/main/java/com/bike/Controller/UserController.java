@@ -28,6 +28,7 @@ import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.LeaseDao;
 import com.bike.Dao.UserDao;
+import com.bike.Dto.Deposit;
 import com.bike.Dto.Lease;
 import com.bike.Dto.Page;
 import com.bike.Dto.User;
@@ -221,6 +222,77 @@ public class UserController {
 		
 		return mv;
 	}
+	
+	
+	@RequestMapping(value="recharge")
+	public ModelAndView toRecharge(HttpServletRequest request) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		ModelAndView mv = new ModelAndView("user/recharge");
+		mv.addObject("User",user);
+		return mv;
+	}
+	
+	@RequestMapping(value="rechargeMoney")
+	@ResponseBody
+	public String recharge(HttpServletRequest request,@RequestBody Map<String,Object> map) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		JSONObject json = new JSONObject();
+		String money = map.get("money").toString();
+		user.setU_balance(Float.parseFloat(money) + user.getU_balance());
+		int i = userDao.recharge(user);
+		if(i>0) {
+			json.put("result", GlobalConstants.success);
+		}else{
+			
+		}
+		
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value="deposit")
+	public ModelAndView toPayDeposit(HttpServletRequest request) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		ModelAndView mv = new ModelAndView("user/payDeposit");
+		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
+		mv.addObject("User",user);
+		mv.addObject("deposit",deposit);
+		return mv;
+	}
+	
+	@RequestMapping(value="payDeposit")
+	@ResponseBody
+	public String PayDeposit(HttpServletRequest request,@RequestBody Map<String,Object> map) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		JSONObject json = new JSONObject();
+		int i = userDao.payDeposit(user);
+		if(i>1) {
+			json.put("result", GlobalConstants.success);
+		}else{
+			
+		}
+		
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value="returnDeposit")
+	@ResponseBody
+	public String returnDeposit(HttpServletRequest request,@RequestBody Map<String,Object> map) {
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		JSONObject json = new JSONObject();
+		int i = userDao.returnDeposit(user);
+		if(i>1) {
+			json.put("result", GlobalConstants.success);
+		}else{
+			
+		}
+		return json.toJSONString();
+	}
+	
 	
 	public static String getIPXY(String ip) {
 		 

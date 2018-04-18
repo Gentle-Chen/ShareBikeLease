@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.SiteDao;
 import com.bike.Dto.Bike;
@@ -105,6 +107,29 @@ public class SiteController {
 		json.put("bikeList", bike);
 		json.put("result", "success");
 		request.setAttribute("Bike",bike);
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value="toAddSite")
+	public String toAddSite(){
+		return "admin/addSite";
+	}
+	
+	@RequestMapping(value="addSite",method=RequestMethod.POST)
+	public ModelAndView addSite(Site site,HttpServletRequest request){
+		siteDao.addSite(site);
+		return new ModelAndView(new RedirectView("get"));
+	}
+	
+	@RequestMapping(value="delete/{s_uuid}",method=RequestMethod.GET)
+	@ResponseBody
+	public String deleteSite(HttpServletRequest request , @PathVariable int s_uuid){
+		Site site = siteDao.deleteSite(s_uuid);
+		JSONObject json = new JSONObject();
+		if(site != null) {
+			json.put("result", GlobalConstants.success);
+		}else{
+		}
 		return json.toJSONString();
 	}
 	

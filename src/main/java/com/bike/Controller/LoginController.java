@@ -83,4 +83,10 @@ public class LoginController {
 			return mv;
 		}
 	}
+	
+	@RequestMapping(value = "/logout")
+	public String logout(HttpSession httpSession,String type,HttpServletRequest request){
+		UserSessionHelper.userLogout(httpSession);
+		return "/login";
+	}
 }

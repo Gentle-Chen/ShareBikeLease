@@ -15,6 +15,12 @@ public interface SiteDao {
 	
 	public List<Site> getAllSite();
 	
+	public Site addSite(Site site);
+	
+	public Site updateSite(Site site);
+	
+	public Site deleteSite(int s_uuid);
+	
 	
 }
 

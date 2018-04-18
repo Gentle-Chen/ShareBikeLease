@@ -99,5 +99,37 @@ public class UserDaoImpl implements UserDao{
 		Deposit deposit = sqlSessionTemplate.selectOne(statement,u_uuid);
 		return deposit;
 	}
+
+	@Override
+	public int recharge(User user) {
+		String statement = "com.bike.Mapper.UserMapper.recharge";
+		int i = sqlSessionTemplate.update(statement,user);
+		return i;
+	}
+
+	@Override
+	public int payDeposit(User user) {
+		String statement = "com.bike.Mapper.UserMapper.payDeposit";
+		int i = sqlSessionTemplate.update(statement,user);
+		int j = 0;
+		Deposit deposit = checkDeposit(Integer.parseInt(user.getU_uuid()));
+		if(deposit != null) {
+			String statement1 = "com.bike.Mapper.UserMapper.updateDeposit1";
+			j = sqlSessionTemplate.insert(statement1,user);
+		}else {
+			String statement1 = "com.bike.Mapper.UserMapper.insertDeposit";
+			j = sqlSessionTemplate.insert(statement1,user);
+		}
+		return i+j;
+	}
+
+	@Override
+	public int returnDeposit(User user) {
+		String statement = "com.bike.Mapper.UserMapper.returnDeposit";
+		String statement1 = "com.bike.Mapper.UserMapper.updateDeposit";
+		int i = sqlSessionTemplate.update(statement,user);
+		int j = sqlSessionTemplate.update(statement1,user);
+		return i+j;
+	}
 	
 }

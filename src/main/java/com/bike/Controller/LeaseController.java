@@ -128,13 +128,29 @@ public class LeaseController {
 //		leaseMap.put("l_status",GlobalConstants.lease_returned);
 //		String flag = leaseDao.returnBike(leaseMap);
 //		return flag;
+		
+		int l_uuid = Integer.parseInt(leaseMap.get("l_uuid").toString());
+		int u_uuid = Integer.parseInt(leaseMap.get("u_uuid").toString());
+		int b_uuid = Integer.parseInt(leaseMap.get("b_uuid").toString());
+		int s_uuid = Integer.parseInt(leaseMap.get("s_uuid").toString());
+		String leaseTime = leaseDao.getLeaseBikeByUUID(l_uuid).get(0).getL_leaseTime();
+		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
+		double money = TimeUtil.caculate(TimeUtil.timeChangeTimeStamp(returnTime),TimeUtil.timeChangeTimeStamp(leaseTime));
+		money = Math.round(money);
+		
+		Map<String,Object> returnMap = new HashMap<String,Object>();
+		returnMap.put("l_money", money);
+		returnMap.put("u_uuid", u_uuid);
+		returnMap.put("b_uuid", b_uuid);
+		returnMap.put("s_uuid", s_uuid);
+		returnMap.put("l_uuid", l_uuid); 
+		returnMap.put("l_returnTime", returnTime); 
+		
 		JSONObject json = new JSONObject();
 		
-		double money = Double.parseDouble((String) leaseMap.get("l_money"));
-		leaseMap.put("l_money", money);
-		leaseMap.put("l_status",GlobalConstants.lease_returned);
-		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
-		leaseMap.put("l_returnTime",returnTime);
+		returnMap.put("l_money", money);
+		returnMap.put("l_status",GlobalConstants.lease_returned);
+		returnMap.put("l_returnTime",returnTime);
 		
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
 		if(money>=user.getU_balance()) {
@@ -147,7 +163,7 @@ public class LeaseController {
 //					return json.toJSONString();
 //				}
 //			}
-			String flag = leaseDao.returnBike(leaseMap);
+			String flag = leaseDao.returnBike(returnMap);
 			if(flag.equals("yes")) {
 				json.put("result", GlobalConstants.success);
 			}else {

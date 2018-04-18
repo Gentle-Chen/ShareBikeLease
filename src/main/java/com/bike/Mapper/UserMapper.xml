@@ -83,5 +83,26 @@
          </where> 
      </select>
      
+     <update id="recharge" parameterType="com.bike.Dto.User">
+     	update b_user set u_balance = #{u_balance} where u_uuid = #{u_uuid}
+     </update>
+     
+     <update id="payDeposit" parameterType="com.bike.Dto.User">
+     	update b_user set u_balance = #{u_balance}-200 where u_uuid = #{u_uuid}
+     </update>
+     <insert id="insertDeposit" parameterType="com.bike.Dto.User">
+     	insert into b_deposit(d_status,d_money,u_uuid) values(1,200.00,#{u_uuid})
+     </insert>
+     <update id="updateDeposit1" parameterType="com.bike.Dto.User">
+     	update b_deposit set d_status = 1 and d_money = 200 where u_uuid = #{u_uuid}
+     </update>
+     
+     <update id="returnDeposit" parameterType="com.bike.Dto.User">
+     	update b_user set u_balance = #{u_balance}+200 where u_uuid = #{u_uuid}
+     </update>
+     <update id="updateDeposit" parameterType="com.bike.Dto.User">
+     	update b_deposit set d_status = 0 and d_money = 0 where u_uuid = #{u_uuid}
+     </update>
+     
  </mapper>
  

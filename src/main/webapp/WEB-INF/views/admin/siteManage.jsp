@@ -38,13 +38,13 @@
 					    ,content	: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">确定删除？</div>'
 					    ,btn: ['确定', '取消']
 					    ,yes: function(index){
-// 					        $.ajax({
-// 					            url:getContextPath()+'/bike/delete/'+b_uuid,
-// 					            data:b_uuid,
-// 					            type:"Post",
-// 					            dataType:"json",
-// 					            success:function(data){
-// 					            	if ( data["result"] == "success" ){
+					        $.ajax({
+					            url:getContextPath()+'/site/delete/'+b_uuid,
+					            data:b_uuid,
+					            type:"Post",
+					            dataType:"json",
+					            success:function(data){
+					            	if ( data["result"] == "00000" ){
 					            		layer.open({
 					            			title: '提示'
 					            			,area: '300px;'
@@ -58,9 +58,9 @@
 					            				 });
 					            				}
 					            			});
-// 					           			 }
-// 					           			}
-// 					       			  });
+					           			 }
+					           			}
+					       			  });
 					   				 }
 								});
 			    			},
@@ -125,6 +125,11 @@
 	                                                	详情
 	                                             </button>
 	                                             <c:if test="${site.s_capacity == '10' }"> 
+	                                             <button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal" 
+												  onclick="detail('${site.s_uuid}','${site.s_name }')" id="${site.s_uuid}" data-target=".edit-app-modal" aria-expanded="false">
+	                                               	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+	                                                	修改
+	                                             </button>
 	 												<button  id="deleteSiteBtn" value="${site.s_uuid }" data-method="notice_delete" class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f "> 
 	 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 
 	 													删除 

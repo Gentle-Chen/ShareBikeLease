@@ -12,7 +12,7 @@
 		    <c:choose>
 				<c:when test="${requestScope.a_email != null}">
 					欢迎&nbsp;${requestScope.a_email}&nbsp;
-					<a href="#">个人中心</a>&nbsp;|&nbsp;<a href="#">注销</a>
+					<a href="#">个人中心</a>&nbsp;|&nbsp;<a href="${ctx}/logout">注销</a>
 				</c:when>
 				<c:otherwise>
 					<a href="${ctx}/login">登录 </a> / <a href="${ctx}/user/register">注册</a>

@@ -47,5 +47,30 @@ public class SiteDaoImpl implements SiteDao{
 		return site;
 	}
 
+	@Override
+	public Site addSite(Site site) {
+		String statement = "com.bike.Mapper.SiteMapper.addSite";
+		int i = sqlSessionTemplate.insert(statement,site);
+		if(i>0) return site;
+		else return null;
+	}
+
+	@Override
+	public Site updateSite(Site site) {
+		String statement = "com.bike.Mapper.SiteMapper.updateSite";
+		int i = sqlSessionTemplate.update(statement,site);
+		if(i>0) return site;
+		else return null;
+	}
+
+	@Override
+	public Site deleteSite(int s_uuid) {
+		String statement = "com.bike.Mapper.SiteMapper.deleteSite";
+		int i = sqlSessionTemplate.delete(statement,s_uuid);
+		Site site = sqlSessionTemplate.selectOne(statement, s_uuid);
+		if(i>0) return site;
+		else return null;
+	}
+
 	
 }

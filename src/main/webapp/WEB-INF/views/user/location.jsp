@@ -39,7 +39,7 @@
 						    ,btn: ['确定', '取消']
 						    ,yes: function(index){
 						        $.ajax({
-						            url:getContextPath()+'/lease/'+b_uuid,
+						            url:getContextPath()+'/return/'+b_uuid,
 						            data:b_uuid,
 						            type:"POST",
 						            dataType:"json",

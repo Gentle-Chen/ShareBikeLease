@@ -61,6 +61,7 @@ public class LeaseDaoImpl implements LeaseDao {
 	}
 
 	public String returnBike(Map<String, Object> returnMap) {
+		String deductMoneyInBalance = "com.bike.BikeMapper.deductMoneyInBalance";
 		String getSiteById = "com.bike.Mapper.BikeMapper.getSiteById";
 		Site site = sqlSessionTemplate.selectOne(getSiteById, returnMap.get("s_uuid"));
 		String returnBike = "com.bike.Mapper.LeaseMapper.returnBike";
@@ -75,6 +76,7 @@ public class LeaseDaoImpl implements LeaseDao {
 			sqlSessionTemplate.update(updateBike,bikeMap);
 			sqlSessionTemplate.update(updateSite,site);
 			sqlSessionTemplate.update(returnBike,returnMap);
+			sqlSessionTemplate.update(deductMoneyInBalance,returnMap);
 			return "yes";
 		}catch(Exception e){
 			e.printStackTrace();

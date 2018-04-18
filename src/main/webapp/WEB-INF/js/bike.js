@@ -74,9 +74,10 @@ function leaseBike(u_uuid,b_uuid){
 	    });
 }
 
-function returnBike_getSite(l_uuid,b_uuid){
+function returnBike_getSite(l_uuid,b_uuid,u_uuid){
 	$("#l_uuid").val(l_uuid);
 	$("#b_uuid").val(b_uuid);
+	$("#u_uuid").val(u_uuid);
 	 $.ajax({
 	        timeout: 3000,
 	        async: false,
