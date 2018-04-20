@@ -66,8 +66,9 @@ public class SiteDaoImpl implements SiteDao{
 	@Override
 	public Site deleteSite(int s_uuid) {
 		String statement = "com.bike.Mapper.SiteMapper.deleteSite";
-		int i = sqlSessionTemplate.delete(statement,s_uuid);
-		Site site = sqlSessionTemplate.selectOne(statement, s_uuid);
+		String statement1 = "com.bike.Mapper.SiteMapper.getSiteByUuid";
+		Site site = sqlSessionTemplate.selectOne(statement1, s_uuid);
+		int i = sqlSessionTemplate.delete(statement,site);
 		if(i>0) return site;
 		else return null;
 	}

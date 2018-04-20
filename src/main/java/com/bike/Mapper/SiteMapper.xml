@@ -33,11 +33,11 @@
      </insert>
      
      <update id="updateSite" parameterType="com.bike.Dto.Site">
-     	update b_site set s_name = #{s_name}
+     	update b_site set s_name = #{s_name} where s_uuid = #{s_uuid}
      </update>
      
      <delete id="deleteSite" parameterType="com.bike.Dto.Site">
-     	delete from b_site where s_uuid = ${s_uuid}
+     	delete from b_site where s_uuid = #{s_uuid}
      </delete>
      
  </mapper>

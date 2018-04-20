@@ -1,6 +1,5 @@
 package com.bike.Controller;
 
-import java.awt.Font;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.jfree.chart.ChartUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,9 +25,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.SiteDao;
+import com.bike.Dao.UserDao;
 import com.bike.Dto.Bike;
 import com.bike.Dto.Page;
 import com.bike.Dto.Site;
+import com.bike.Dto.User;
 import com.bike.Helper.UserSessionHelper;
 import com.bike.Utils.DrawUtil;
 
@@ -41,11 +41,17 @@ public class BikeController {
 	private BikeDao bikeDao;
 	@Autowired
 	private SiteDao siteDao;
+	@Autowired
+	private UserDao userDao;
 	
 	
 	@RequestMapping(value="toAddBike")
-	public String toAddBike(){
-		return "admin/addBike";
+	public ModelAndView toAddBike(HttpServletRequest request){
+		ModelAndView mv = new ModelAndView("admin/addBike");
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		mv.addObject("User",user);
+		return mv;
 	}
 	@RequestMapping(value="checkBike/{b_id}",method=RequestMethod.GET)
 	@ResponseBody

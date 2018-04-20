@@ -112,23 +112,6 @@ public class LeaseController {
 	@RequestMapping(value="return",method=RequestMethod.POST)
 	@ResponseBody
 	public String returnBike(@RequestBody Map<String,Object> leaseMap,HttpServletRequest request) throws ParseException{
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		map.put("u_uuid",leaseMap.get("u_uuid"));//�޸��û����
-//		map.put("b_uuid",leaseMap.get("b_uuid"));//�޸ĵ���״̬
-//		map.put("s_uuid",leaseMap.get("s_uuid"));//�޸�վ������                                                             
-//		map.put("l_uuid",leaseMap.get("l_uuid"));//�޸����ޱ�Ļ���ʱ�䡢��״̬
-//		String leaseTime = bikeDao.getLeaseBikeByUUID((int)leaseMap.get("l_uuid")).get(0).getL_leaseTime();
-//		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
-//		map.put("l_returnTime",returnTime);
-//		double money = TimeUtil.caculate(TimeUtil.timeChangeTimeStamp(returnTime),TimeUtil.timeChangeTimeStamp(leaseTime));
-//		map.put("l_money",money);
-		
-//		double money = Double.parseDouble((String) leaseMap.get("l_money"));
-//		leaseMap.put("l_money", money);
-//		leaseMap.put("l_status",GlobalConstants.lease_returned);
-//		String flag = leaseDao.returnBike(leaseMap);
-//		return flag;
-		
 		int l_uuid = Integer.parseInt(leaseMap.get("l_uuid").toString());
 		int u_uuid = Integer.parseInt(leaseMap.get("u_uuid").toString());
 		int b_uuid = Integer.parseInt(leaseMap.get("b_uuid").toString());
@@ -156,13 +139,6 @@ public class LeaseController {
 		if(money>=user.getU_balance()) {
 			json.put("result", GlobalConstants.not_enough_money);
 		}else {
-//			List<Lease> userLease = leaseDao.getLeaseBike(Integer.parseInt(leaseMap.get("u_uuid").toString()));
-//			for(int i=0;i<userLease.size();i+ +) {
-//				if(userLease.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
-//					json.put("result", GlobalConstants.lease_no_return);
-//					return json.toJSONString();
-//				}
-//			}
 			String flag = leaseDao.returnBike(returnMap);
 			if(flag.equals("yes")) {
 				json.put("result", GlobalConstants.success);
@@ -172,5 +148,27 @@ public class LeaseController {
 		}
 		return json.toJSONString();
 	}
-
+//	List<Lease> userLease = leaseDao.getLeaseBike(Integer.parseInt(leaseMap.get("u_uuid").toString()));
+//	for(int i=0;i<userLease.size();i+ +) {
+//		if(userLease.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
+//			json.put("result", GlobalConstants.lease_no_return);
+//			return json.toJSONString();
+//		}
+//	}
+//	Map<String,Object> map = new HashMap<String,Object>();
+//	map.put("u_uuid",leaseMap.get("u_uuid"));//�޸��û����
+//	map.put("b_uuid",leaseMap.get("b_uuid"));//�޸ĵ���״̬
+//	map.put("s_uuid",leaseMap.get("s_uuid"));//�޸�վ������                                                             
+//	map.put("l_uuid",leaseMap.get("l_uuid"));//�޸����ޱ�Ļ���ʱ�䡢��״̬
+//	String leaseTime = bikeDao.getLeaseBikeByUUID((int)leaseMap.get("l_uuid")).get(0).getL_leaseTime();
+//	String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
+//	map.put("l_returnTime",returnTime);
+//	double money = TimeUtil.caculate(TimeUtil.timeChangeTimeStamp(returnTime),TimeUtil.timeChangeTimeStamp(leaseTime));
+//	map.put("l_money",money);
+	
+//	double money = Double.parseDouble((String) leaseMap.get("l_money"));
+//	leaseMap.put("l_money", money);
+//	leaseMap.put("l_status",GlobalConstants.lease_returned);
+//	String flag = leaseDao.returnBike(leaseMap);
+//	return flag;
 }

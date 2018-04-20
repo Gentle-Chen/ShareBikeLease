@@ -11,20 +11,22 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.SiteDao;
+import com.bike.Dao.UserDao;
 import com.bike.Dto.Bike;
 import com.bike.Dto.Page;
 import com.bike.Dto.Site;
+import com.bike.Dto.User;
 import com.bike.Helper.UserSessionHelper;
 
 @Controller
@@ -36,6 +38,9 @@ public class SiteController {
 	
 	@Autowired
 	private SiteDao siteDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@RequestMapping(value="all",method=RequestMethod.GET)
 	@ResponseBody
@@ -110,15 +115,35 @@ public class SiteController {
 		return json.toJSONString();
 	}
 	
-	@RequestMapping(value="toAddSite")
-	public String toAddSite(){
-		return "admin/addSite";
+	@RequestMapping(value="add")
+	public ModelAndView toAddSite(HttpServletRequest request){
+		ModelAndView mv = new ModelAndView("admin/addSite");
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		mv.addObject("User",user);
+		return mv;
 	}
 	
 	@RequestMapping(value="addSite",method=RequestMethod.POST)
-	public ModelAndView addSite(Site site,HttpServletRequest request){
-		siteDao.addSite(site);
-		return new ModelAndView(new RedirectView("get"));
+//	@ResponseBody
+//	public String addSite(@RequestBody Map<String,Object> map,HttpServletRequest request){
+	public String addSite(Site site,HttpServletRequest request){
+//		JSONObject json = new JSONObject();
+//		Site site = new Site();
+//		site.setS_name(map.get("s_name").toString());
+//		site.setS_longitude(map.get("longitude").toString());
+//		site.setS_latitude(map.get("latitude").toString());
+//		site.setS_capacity(map.get("s_capacity").toString());
+//		Site s = siteDao.addSite(site);
+//		if(s != null) {
+//			json.put("result", GlobalConstants.success);
+//		}
+		Site s = siteDao.addSite(site);
+		if (s != null) {
+			return "redirect:get";
+		}else {
+			return "";
+		}
 	}
 	
 	@RequestMapping(value="delete/{s_uuid}",method=RequestMethod.GET)
@@ -129,6 +154,21 @@ public class SiteController {
 		if(site != null) {
 			json.put("result", GlobalConstants.success);
 		}else{
+		}
+		return json.toJSONString();
+	}
+	
+	@RequestMapping(value="update",method=RequestMethod.POST)
+	@ResponseBody
+	public String updateSite(HttpServletRequest request , @RequestBody Map<String,Object> map){
+		JSONObject json = new JSONObject();
+		Site site = new Site();
+		site.setS_uuid(map.get("s_uuid").toString());
+		site.setS_name(map.get("s_name").toString());
+		site.setS_capacity(map.get("s_capacity").toString());
+		Site s = siteDao.updateSite(site);
+		if(s !=null) {
+			json.put("result", GlobalConstants.success);
 		}
 		return json.toJSONString();
 	}

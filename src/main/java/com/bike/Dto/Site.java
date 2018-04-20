@@ -7,6 +7,7 @@ public class Site {
 	private String s_longitude;
 	private String s_latitude;
 	private String s_capacity;
+	private String s_allCapacity;
 	
 	
 	public String getS_uuid() {
@@ -40,6 +41,13 @@ public class Site {
 		this.s_capacity = s_capacity;
 	}
 	
+	
+	public String getS_allCapacity() {
+		return s_allCapacity;
+	}
+	public void setS_allCapacity(String s_allCapacity) {
+		this.s_allCapacity = s_allCapacity;
+	}
 	@Override
 	public String toString() {
 		return "Site [s_uuid=" + s_uuid + ", s_name=" + s_name + ", s_longitude="

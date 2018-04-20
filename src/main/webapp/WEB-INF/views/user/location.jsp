@@ -131,6 +131,8 @@
 			  		   		<jsp:param value="location" name="action" />
 			  		   	</jsp:include>
 			  		</div>
+			  		<select>
+			  		</select>
   					  当前位置为:${province}/${city}/香洲区/北京理工大学珠海学院/弘毅楼(<a href="location1">地图</a>)<br>
   					  周围有2个单车站点
   					  <div class="col-md-10 l-b">

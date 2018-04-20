@@ -22,7 +22,7 @@ public class BikeJobBean {
 		bikeMap.put("status", GlobalConstants.bike_fixing_status);
 		bikeMap.put("b_status", GlobalConstants.bike_idle_status);
 		int i = bikeDao.fixedBike(bikeMap);
-		logger.debug("¶¨Ê±ÈÎÎñ[ÐÞÀíµ¥³µ]Íê³É£¬·µ»Ø½á¹û£º" + i + "Ìõ");
+		logger.debug("SBLS->æˆåŠŸä¿®ç†" + i + "è¾†å•è½¦");
     } 
 
 }

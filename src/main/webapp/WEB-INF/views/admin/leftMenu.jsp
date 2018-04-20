@@ -13,6 +13,7 @@
 					<li id="bikeManage" ${param.action == 'bikeManage'?'class="active"':''}><a href="${ctx}/bike/bikeManage">单车管理</a></li>
 					<li  ${param.action == 'addBike'?'class="active"':''}><a href="${ctx}/bike/toAddBike">新增单车</a></li>
 					<li ${param.action == 'siteManage'?'class="active"':''}><a href="${ctx}/site/get">站点管理</a></li>
+					<li ${param.action == 'addSite'?'class="active"':''}><a href="${ctx}/site/add">新增站点</a></li>
 				</ul>
 			</div>
 		</div>

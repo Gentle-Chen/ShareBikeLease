@@ -252,7 +252,7 @@ function checkResetPassword(){
 	        	}else{
 	        		$("#identityCardErrorTips").hide();
 		    		$(this).removeClass("cnaacValidationFails");
-		    		alert("�ѷ����ʼ�");
+		    		alert("fail");
 	        	}
 	        }
 	    });
