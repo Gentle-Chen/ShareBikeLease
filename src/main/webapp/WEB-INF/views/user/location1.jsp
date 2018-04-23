@@ -74,7 +74,7 @@
     //创建地图函数：
     function createMap(){
         var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
-        var point = new BMap.Point(113.543494,22.370807);//定义一个中心点坐标   
+        var point = new BMap.Point(${centerSite.s_longitude},${centerSite.s_latitude});//定义一个中心点坐标   
         map.centerAndZoom(point,16);//设定地图的中心点和坐标并将地图显示在地图容器中
         window.map = map;//将map变量存储在全局
     }
@@ -100,25 +100,31 @@
 	map.addControl(ctrl_sca);
     }
     
-    var content = '<div id="content" style="display:none"><table border="1"><thead><tr>'+
-    					'<td>单车编号 </td>'+
-    					'<td>单车状态 </td></tr></thead>'+
-    					'<tbody><e:forEach items="${requestScope.Bike }" var="bike"><tr>'+
-    					'<td>${bike.b_uuid}</td>'+
-    					'<td>${bike.b_status}</td>'+
-    			'</tr></e:forEach></tbody></table>'+
-    			' <div class="row">'+
-	                        '<nav class="right-block">'+
-							  	'<ul class="pagination" id="foot_page_div"></ul>'+
-							'</nav>'+
-						'</div></div>';
+//     var content = '<div id="content" style="display:none"><table border="1"><thead><tr>'+
+//     					'<td>单车编号 </td>'+
+//     					'<td>单车状态 </td></tr></thead>'+
+//     					'<tbody><e:forEach items="${requestScope.Bike }" var="bike"><tr>'+
+//     					'<td>${bike.b_uuid}</td>'+
+//     					'<td>${bike.b_status}</td>'+
+//     			'</tr></e:forEach></tbody></table>'+
+//     			' <div class="row">'+
+// 	                        '<nav class="right-block">'+
+// 							  	'<ul class="pagination" id="foot_page_div"></ul>'+
+// 							'</nav>'+
+// 						'</div></div>';
+	var content = "";
     
     
 	//文字标注数组
-    var lbPoints = [{title:"弘毅楼",point:"113.54593|22.374182",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ,{title:"求是楼",point:"113.538258|22.374875",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ,{title:"明德楼",point:"113.545687|22.369344",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
-		 ];
+	var sites = ${site}.allSite;
+	var lbPoints = new Array();
+//     var lbPoints = [{title:"弘毅楼",point:"113.54593|22.374182",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+// 		 ,{title:"求是楼",point:"113.538258|22.374875",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+// 		 ,{title:"明德楼",point:"113.545687|22.369344",content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+// 		 ];
+    for(i in sites){
+		lbPoints.push({title:sites[i].s_name,point:sites[i].s_longitude+"|"+sites[i].s_latitude,content:content,isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}});
+	}
     //向地图中添加文字标注函数
     function addRemark(){
         for(var i=0;i<lbPoints.length;i++){
@@ -144,17 +150,6 @@
 				var _iw = createInfoWindow(i);
 				var _marker = marker;
 				_marker.addEventListener("click",function(){
-					$.ajax({
-				        timeout: 3000,
-				        async: false,
-				        url: getContextPath()+'/bike/checkBike/'+b_id,
-				        dataType: "json",
-				        contentType: "application/json; charset=utf-8",
-				        success: function (data) {
-				        	if(data["result"] == '20002'){
-				        	}
-				        }
-				    });
 				    this.openInfoWindow(_iw);
 				    $("#content").css("display","inline");
 			    });

@@ -2,10 +2,10 @@
 <!-- logger获取方式  Logger logger = LogManager.getLogger(本类的名.class) --> 
 <!-- 导入的包  import org.apache.logging.log4j.LogManager;-->
 <!-- import org.apache.logging.log4j.Logger; --> 
-<configuration status="debug">	 
+<configuration status="TRACE">	 
   <appenders>  
-	 <Console name="Console" target="SYSTEM_OUT">  
-		<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+	 <Console name="consolePrint" target="SYSTEM_OUT">  
+<!-- 		<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/> -->
 		<PatternLayout
 			pattern="%d{yyyy-MM-dd HH:mm:ss} -%-5level [%t]  %logger.%M(%L) -%msg%n" />
 	</Console>
@@ -26,8 +26,8 @@
 	  <logger name="com.bike.Dao" level="TRACE" additivity="false">
           <appender-ref ref="consolePrint"/>
       </logger>
-      <root level="trace">
-          <appender-ref ref="Console"/>            
+      <root level="TRACE">
+          <appender-ref ref="consolePrint"/>            
           <appender-ref ref="RollingFile"/>
       </root>      
   </loggers>  

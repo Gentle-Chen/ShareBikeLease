@@ -17,93 +17,23 @@
 	    <link rel="stylesheet" href="/ShareBikeLease/js/quote/layui/css/layui.css"  media="all">
 	    <script src="/ShareBikeLease/js/quote/layui/layui.js" charset="utf-8"></script>
  		<script src="/ShareBikeLease/js/bike.js" charset="utf-8"></script>
+ 		<script src="/ShareBikeLease/js/location.js" charset="utf-8"></script>
 		<script type="text/javascript">	
 		$(document).ready(function(){
 			pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page2");
 			$('#foot_page_div').html(pageStr);
+			
 		});
-		
 		layui.use('layer', function(){ //独立版的layer无需执行这一句
 			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
-			  //触发事件
-			  var active = {
-					  
-				  notice: function(){
-					  var b_uuid = $('#leaseBtn').val();
-						layer.open({
-						    time: 0 //不自动关闭
-						    ,title: '提示'
-						    ,area: '300px;'
-						    ,shade: [0.8, '#393D49']
-						    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">确定租赁？</div>'
-						    ,btn: ['确定', '取消']
-						    ,yes: function(index){
-						        $.ajax({
-						            url:getContextPath()+'/return/'+b_uuid,
-						            data:b_uuid,
-						            type:"POST",
-						            dataType:"json",
-						            success:function(data){
-						            	if(data["result"] == "0" ){
-						            		layer.open({
-						            			title: '提示'
-						            			,area: '300px;'
-						            			,id: 'LAY_layuipro'
-						    					,btn: ['确定', '取消']
-						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">存在未结算订单，请先结算</div>'
-						            			,success: function(layero){
-						            				 var btn = layero.find('.layui-layer-btn');
-						            				 btn.find('.layui-layer-btn0').attr({
-						 					        	href : getContextPath()+'/user/order'
-						            				 });
-						            				}
-						            			});
-						            	}else{
-						            		if ( data["result"] == "00000" ){
-							            		layer.open({
-							            			title: '提示'
-							            			,area: '300px;'
-							            			,id: 'LAY_layuipro'
-							    					,btn: ['确定', '取消']
-							            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">租赁成功，已开始计时</div>'
-							            			,success: function(layero){
-							            				 var btn = layero.find('.layui-layer-btn');
-							            				 btn.find('.layui-layer-btn0').attr({
-							 					        	href : getContextPath()+'/user/order'
-							            				 });
-							            				}
-							            			});
-							           			 }else{
-							           				layer.open({
-								            			title: '提示'
-								            			,area: '300px;'
-								            			,id: 'LAY_layuipro'
-								    					,btn: ['确定', '取消']
-								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚未缴纳押金，请先缴纳押金</div>'
-								            			,success: function(layero){
-								            				 var btn = layero.find('.layui-layer-btn');
-								            				 btn.find('.layui-layer-btn0').attr({
-								 					        	href : getContextPath()+'/user/recharge'
-								            				 });
-								            				}
-								            			});
-							           				 }
-						            	}
-						            	
-						           			 }
-						       			  });
-						   				 }
-									});
-				    			},
+		});
 			  
-			 	   		}
-			  
-				  $('#leaseBtn').on('click', function(){
-					    var othis = $(this), method = othis.data('method');
-					    active[method] ? active[method].call(this, othis) : '';
-					  });
+// 				  $('#leaseBtn').on('click', function(){
+// 					    var othis = $(this), method = othis.data('method');
+// 					    active[method] ? active[method].call(this, othis) : '';
+// 					  });
 				  
-			});
+			
 		 
 		</script>
 		<style type="text/css">
@@ -131,22 +61,38 @@
 			  		   		<jsp:param value="location" name="action" />
 			  		   	</jsp:include>
 			  		</div>
-			  		<select>
-			  		</select>
-  					  当前位置为:${province}/${city}/香洲区/北京理工大学珠海学院/弘毅楼(<a href="location1">地图</a>)<br>
-  					  周围有2个单车站点
+<!-- 			  		位置选择：<select id="b_status" name="b_status" class="col-sm-2" style="height:35px;width:100px"> -->
+<%-- 	                          	 	<option value="" <c:if test="${site==''}">selected</c:if>>请选择</option> --%>
+<%-- 	                          	 	<option value="2" <c:if test="${site=='2'}">selected</c:if>>弘毅楼</option> --%>
+<%-- 	                          	 	<option value="4" <c:if test="${site=='4'}">selected</c:if>>明德楼</option> --%>
+<!--                      	 </select> -->
   					  <div class="col-md-10 l-b">
+  					  <div style="width: 100%;height:50%;padding: 10px;background: #27b0d6;color: #fff;">
+  					  当前位置为:${province}/${city}/香洲区/北京理工大学珠海学院/${location}
+  					  <button class="btn btn-sm btn-success "><a href="${ctx}/map/showMap/${nsite}">地图详情</a></button><br><br>
+  					  周围有${numberSite}个单车站点
+  					  </div><br>
 			  			<form class="form-horizontal" method="post" action="${ctx}/user/location" id="locationForm">
+			  			<input type="hidden" value="${nsite}" id="site1" name="site1">
 	  						<div class="form-group">
-	                          <label class="col-sm-2 control-label" style="width:100px;">站点筛选：</label>
+	                          <label class="col-sm-2 control-label" style="width:100px;">站点选择：</label>
 	                          	 <select id="b_status" name="b_status" class="col-sm-2" style="height:35px;width:100px">
-	                          	 	<option value="" <c:if test="${site==''}">selected</c:if>>请选择</option>
-	                          	 	<option value="2" <c:if test="${site=='2'}">selected</c:if>>弘毅楼</option>
-	                          	 	<option value="4" <c:if test="${site=='4'}">selected</c:if>>明德楼</option>
+	                          	 <option value="" <c:if test="${site==''}">selected</c:if>>请选择</option>
+	                          	 <c:forEach items="${valueObject}" var="valueObject">
+		                          	 <c:set value="${fn:split(valueObject, '/')[0] }" var="value"></c:set>
+		                          	 <c:set value="${fn:split(valueObject, '/')[1] }" var="name"></c:set>
+	                          	 
+	                          	 <option value="${value }" <c:if test="${site==value}">selected</c:if>>${name }</option>
+	                          	 
+	                          	 </c:forEach>
+<%-- 	                          	 	<option value="" <c:if test="${site==''}">selected</c:if>>请选择</option> --%>
+<%-- 	                          	 	<option value="2" <c:if test="${site=='2'}">selected</c:if>>弘毅楼</option> --%>
+<%-- 	                          	 	<option value="3" <c:if test="${site=='3'}">selected</c:if>>求是楼</option> --%>
+<%-- 	                          	 	<option value="4" <c:if test="${site=='4'}">selected</c:if>>明德楼</option> --%>
 	                          	 </select>
 							<label class="col-sm-2 control-label" style="width:100px;"></label>
 							  <div class="col-sm-2 text-center">
-	                       		<button type="button" class="btn btn-success" onclick="submit()">搜索</button>
+	                       		<button type="button" class="btn btn-success" onclick="submit()">提交</button>
 							   </div>
 	                       </div>
 						</form>
@@ -189,8 +135,10 @@
 									<td>
 										<c:choose>
 											<c:when test="${bike.b_status == '0' }">
-												<button id="leaseBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  style="background: blue;border-color:blue ">
-													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+												<button id="leaseBtn" value="${bike.b_uuid }" data-method="notice" 
+												class="btn btn-sm btn-success "  style="background: blue;border-color:blue "
+												onclick="locat()">
+													<span class="glyphicon glyphicon-edit"></span>
 														租赁
 												</button>
 											</c:when>

@@ -21,6 +21,8 @@ public interface SiteDao {
 	
 	public Site deleteSite(int s_uuid);
 	
+	public List<Site> checkSite(int s_uuid);
+	
 	
 }
 

@@ -77,7 +77,8 @@ public class BikeDaoImpl implements BikeDao{
 
 
 	public Page countUsingBikeByTime(Map<String,Object> pageMap) {
-		Long totalCount = pageDao.selectBikeTotalCount(GlobalConstants.bike_using_status);
+		pageMap.put("b_status", GlobalConstants.bike_using_status) ;
+		Long totalCount = pageDao.selectBikeTotalCount(pageMap);
 		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
 		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());
@@ -91,7 +92,8 @@ public class BikeDaoImpl implements BikeDao{
 
 
 	public Page countOtherBike(Map<String, Object> pageMap) {
-		Long totalCount = pageDao.selectBikeTotalCount(GlobalConstants.bike_free_status);
+		pageMap.put("b_status", GlobalConstants.bike_free_status) ;
+		Long totalCount = pageDao.selectBikeTotalCount(pageMap);
 		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
 		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());

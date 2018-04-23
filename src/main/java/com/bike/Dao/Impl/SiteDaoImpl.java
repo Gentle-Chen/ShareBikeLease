@@ -73,5 +73,12 @@ public class SiteDaoImpl implements SiteDao{
 		else return null;
 	}
 
+	@Override
+	public List<Site> checkSite(int s_uuid) {
+		String statement = "com.bike.Mapper.SiteMapper.checkSite";
+		List<Site> site = sqlSessionTemplate.selectList(statement,s_uuid);
+		return site;
+	}
+
 	
 }

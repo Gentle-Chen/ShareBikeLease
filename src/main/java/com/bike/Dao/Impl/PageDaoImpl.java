@@ -23,11 +23,9 @@ public class PageDaoImpl implements PageDao {
 	@Autowired
 	PageMapper pageMapper;
 	
-	public Long selectBikeTotalCount(String b_status) {
+	public Long selectBikeTotalCount(Map<String, Object> pageMap) {
 		String statement = "com.bike.Mapper.BikeMapper.selectBikeTotalCount";
-		Map<String,String> statusMap = new HashMap<String,String>();
-		statusMap.put("b_status",b_status);
-		Long totalCount = sqlSessionTemplate.selectOne(statement,statusMap);
+		Long totalCount = sqlSessionTemplate.selectOne(statement,pageMap);
 		return totalCount;
 	}
 

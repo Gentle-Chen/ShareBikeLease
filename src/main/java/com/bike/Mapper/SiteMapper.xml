@@ -40,5 +40,9 @@
      	delete from b_site where s_uuid = #{s_uuid}
      </delete>
      
+     <select id="checkSite" parameterType="java.util.HashMap" resultMap="SiteMap">
+			 select *  from b_site where s_uuid != 1  and s_uuid != #{s_uuid}
+		</select>
+     
  </mapper>
  

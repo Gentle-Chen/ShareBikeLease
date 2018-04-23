@@ -75,10 +75,18 @@
       <select id="selectBikeTotalCount" resultType="Long" parameterType="java.util.HashMap">
 			select count(*) from b_bike as a,b_site as b 
 			<where>
-				a.s_uuid=b.s_uuid
-				<if test="b_status != null and b_status !='' ">
-					and b_status = #{b_status}
-				</if>
+				<if test="s_uuid != null and s_uuid != '' ">
+     				 (a.s_uuid = #{s_uuid}
+     			</if>
+     			<foreach  item = "Sid" index="index" collection = "idObject"  >
+     				<if test="Sid != null and Sid !=''">
+     					or  a.s_uuid = #{Sid}
+     				</if>
+     			</foreach>
+     				)and b_status != 1 and a.s_uuid = b.s_uuid
+     			<if test="b_status != null and b_status != '' ">
+     				and b_status = #{b_status}
+     			</if>
 			</where> 
 	  </select>
 	  <select id="selectPageBike" resultMap="BikeMap" parameterType="java.util.HashMap">    
@@ -130,13 +138,20 @@
       <select id="countOtherBike" resultMap="BikeMap" parameterType="java.util.HashMap">
      	select * from b_bike a, b_site b 
      		<where>
-     				b_status != 1 and a.s_uuid = b.s_uuid
+     		<if test="s_uuid != null and s_uuid != '' ">
+     				 (a.s_uuid = #{s_uuid}
+     			</if>
+     			<foreach  item = "Sid" index="index" collection = "idObject"  >
+     				<if test="Sid != null and Sid !=''">
+     					or  a.s_uuid = #{Sid}
+     				</if>
+     			</foreach>
+     				)and b_status != 1 and a.s_uuid = b.s_uuid
      			<if test="b_status != null and b_status != '' ">
      				and b_status = #{b_status}
      			</if>
-     			<if test="s_uuid != null and s_uuid != '' ">
-     				and a.s_uuid = #{s_uuid}
-     			</if>
+     			
+     			
      		</where>
      		limit ${startNum},${pageSize}
      </select>

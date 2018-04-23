@@ -9,7 +9,7 @@ import com.bike.Dto.Site;
 
 public interface PageDao {
 	
-	Long selectBikeTotalCount(String b_status);
+	Long selectBikeTotalCount(Map<String, Object> pageMap);
 	
 	List<Bike> selectPageBike(Map<String,Object> pageMap);
 	

@@ -1,5 +1,6 @@
 package com.bike.Controller;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +8,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,20 +24,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.MvcNamespaceHandler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.LeaseDao;
+import com.bike.Dao.SiteDao;
 import com.bike.Dao.UserDao;
 import com.bike.Dto.Deposit;
 import com.bike.Dto.Lease;
 import com.bike.Dto.Page;
+import com.bike.Dto.Site;
 import com.bike.Dto.User;
 import com.bike.Helper.UserSessionHelper;
 import com.bike.Thread.AuditResultEmailThread;
 import com.bike.Utils.ApplicationUtil;
 import com.bike.Utils.CommonUtil;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 import sun.misc.BASE64Decoder;
 
@@ -51,6 +57,9 @@ public class UserController {
 	
 	@Autowired
 	private LeaseDao leaseDao;
+	
+	@Autowired
+	private SiteDao siteDao;
 	
 	@RequestMapping(value="/toRegist")
 	public String toRegist(){
@@ -180,10 +189,71 @@ public class UserController {
 		return "login";
 	}
 	
+	@RequestMapping(value="located")
+	public ModelAndView located(){
+		ModelAndView mv = new ModelAndView("user/located");
+		return mv;
+	}
+	
 	@RequestMapping(value="location")
 	public ModelAndView location(@RequestParam(required = false, defaultValue = "1")
     int pageNum, @RequestParam(required = false, defaultValue = "2")
     int pageSize, HttpServletRequest request) {
+		
+		ModelAndView mv = new ModelAndView("user/location");
+		
+		Map<String, String> params = CommonUtil.getParams(request);
+		Map<String,Object> pageMap = new HashMap<String,Object>();
+		
+		String locateduuid = params.get("site");
+		if(locateduuid == null) {
+			locateduuid = params.get("site1");
+		}
+		mv.addObject("nsite", locateduuid);
+		
+		
+		List valueObject = new ArrayList();
+		List idObject = new ArrayList();
+		
+		
+        String s_uuid = params.get("site");
+        if(s_uuid == null || s_uuid.equals("")) {
+        	s_uuid = params.get("b_status");
+        }
+		if(s_uuid == null || s_uuid.equals("")) {
+			s_uuid = params.get("formsite");
+		}
+		if(s_uuid == null || s_uuid.equals("")) {
+			s_uuid = locateduuid;
+		}
+        Site site = siteDao.getSiteByUuid(Integer.parseInt(s_uuid));
+		List<Site> sites = siteDao.checkSite(Integer.parseInt(s_uuid));
+		int j = 1;
+		
+		valueObject.add(site.getS_uuid() + "/" + site.getS_name());
+		for (int i = 0; i < sites.size(); i++) {
+			if(checkPoint(Double.parseDouble(site.getS_latitude()), Double.parseDouble(site.getS_longitude()), 
+					Double.parseDouble(sites.get(i).getS_latitude()), Double.parseDouble(sites.get(i).getS_longitude()))) {
+				
+				j++;
+				valueObject.add(sites.get(i).getS_uuid() + "/" + sites.get(i).getS_name());
+				idObject.add(sites.get(i).getS_uuid());
+				
+				
+			}
+		}
+		mv.addObject("valueObject",valueObject);
+		pageMap.put("idObject", idObject);
+		pageMap.put("s_uuid", s_uuid);
+		mv.addObject("site", "");
+		if(params.get("b_status") != null && !params.get("b_status").toString().equals("")) {
+			List list = new ArrayList<>();
+			pageMap.put("idObject",list);
+			pageMap.put("s_uuid", params.get("b_status"));
+			mv.addObject("site", s_uuid);
+		}
+		
+		
 		String ip = getClientIp(request);
 		
 		String json = getIPXY(null);
@@ -196,24 +266,33 @@ public class UserController {
 		String aa = "113.543494,22.370807";
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
-		ModelAndView mv = new ModelAndView("user/location");
+		
 		mv.addObject("User",user);
 		mv.addObject("province",province);
 		mv.addObject("city",city);
 		mv.addObject("x",x);
 		mv.addObject("y",y);
-		
-		Map<String, String> params = CommonUtil.getParams(request);
-        String s_uuid = params.get("site");
+//		
+//		Map<String, String> params = CommonUtil.getParams(request);
+//        String s_uuid = params.get("site");
+        if(s_uuid.equals("2")){
+        	mv.addObject("location", "弘毅楼");
+        }
+        if(s_uuid.equals("3")){
+        	mv.addObject("location", "求是楼");
+        }
+        if(s_uuid.equals("4")){
+        	mv.addObject("location", "明德楼");
+        }
         
-        mv.addObject("site", s_uuid);
-		
+        mv.addObject("numberSite", j);
         
-        Map<String,Object> pageMap = new HashMap<String,Object>();
+//		
+//        
+        
         pageMap.put("pageNum", pageNum);
 		pageMap.put("pageSize", pageSize);
 		pageMap.put("b_status", GlobalConstants.bike_free_status);
-		pageMap.put("s_uuid", s_uuid);
         
 		Page page = null;
 		page =  bikeDao.countOtherBike(pageMap);
@@ -223,6 +302,27 @@ public class UserController {
 		return mv;
 	}
 	
+	private final double EARTH_RADIUS = 6378.137;//地球半径
+	private static double rad(double d)
+	{
+	   return d * Math.PI / 180.0;
+	}
+	
+	public boolean checkPoint(double lat1, double lng1, double lat2, double lng2){
+		   double radLat1 = rad(lat1);
+		   double radLat2 = rad(lat2);
+		   double a = radLat1 - radLat2;
+		   double b = rad(lng1) - rad(lng2);
+
+		   double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) +
+		    Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+		   s = s * EARTH_RADIUS;
+		   s = Math.round(s * 1000);
+		   if(s<500) {
+			   return true;
+		   }
+		   else return false;
+	}
 	
 	@RequestMapping(value="recharge")
 	public ModelAndView toRecharge(HttpServletRequest request) {
@@ -371,3 +471,4 @@ public class UserController {
 	}
 	
 }
+

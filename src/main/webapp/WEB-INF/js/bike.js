@@ -222,9 +222,12 @@ function page2(pageNum){
 	var startTime = $.trim($("#startTime").val());
 	var endTime = $.trim($("endTime").val());
 	var site = $.trim($("#site").val());
-	var url = getContextPath() + "/user/location/?pageNum=" + pageNum;
+	var site1 = $("#site1").val();
+	var url = getContextPath() + "/user/location/?pageNum=" + pageNum + "&site1=" + site1;
 	if (b_status != ""){
 		url = url + "&b_status=" + b_status;
+	}else{
+		url = url + "&formsite=" + site1;
 	}
 	if (site != ""){
 		url = url + "&site=" + site;
