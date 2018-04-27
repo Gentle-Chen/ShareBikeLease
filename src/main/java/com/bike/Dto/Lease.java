@@ -8,6 +8,10 @@ public class Lease {
 	
 	private String l_returnTime;
 	
+	private Site l_leaseSite;
+	
+	private Site l_returnSite;
+	
 	private double l_money;
 	
 	private String l_status;
@@ -82,6 +86,23 @@ public class Lease {
 	public void setL_money_status(String l_money_status) {
 		this.l_money_status = l_money_status;
 	}
+
+	public Site getL_leaseSite() {
+		return l_leaseSite;
+	}
+
+	public void setL_leaseSite(Site l_leaseSite) {
+		this.l_leaseSite = l_leaseSite;
+	}
+
+	public Site getL_returnSite() {
+		return l_returnSite;
+	}
+
+	public void setL_returnSite(Site l_returnSite) {
+		this.l_returnSite = l_returnSite;
+	}
+
 	
 	
 

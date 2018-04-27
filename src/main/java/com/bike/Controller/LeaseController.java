@@ -40,9 +40,10 @@ public class LeaseController {
 	public String toLeaseBike(){
 		return "bike/leaseBike";
 	}
-	@RequestMapping(value="lease/{b_uuid}",method=RequestMethod.POST)
+	@RequestMapping(value="lease/{b_uuid}/{s_uuid}",method=RequestMethod.POST)
 	@ResponseBody
-	public String leaseBike(@PathVariable("b_uuid")String b_uuid,HttpServletRequest request) throws ParseException{
+	public String leaseBike(@PathVariable("b_uuid")String b_uuid,@PathVariable("s_uuid")String s_uuid,
+			HttpServletRequest request) throws ParseException{
 		
 		JSONObject json = new JSONObject();
 		
@@ -65,6 +66,7 @@ public class LeaseController {
 		}else {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("b_uuid",b_uuid);
+			map.put("l_leaseSite",s_uuid);
 			map.put("u_uuid",user.getU_uuid());
 			map.put("l_leaseTime",TimeUtil.timeStampChangeTime(new Date().getTime()));
 			map.put("l_status",GlobalConstants.lease_no_return);

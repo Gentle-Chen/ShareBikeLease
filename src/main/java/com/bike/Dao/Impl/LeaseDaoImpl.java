@@ -12,6 +12,7 @@ import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
 import com.bike.Dao.LeaseDao;
 import com.bike.Dao.PageDao;
+import com.bike.Dao.SiteDao;
 import com.bike.Dto.Bike;
 import com.bike.Dto.Lease;
 import com.bike.Dto.Page;
@@ -28,6 +29,9 @@ public class LeaseDaoImpl implements LeaseDao {
 	
 	@Autowired
 	private BikeDao bikeDao;
+	
+	@Autowired
+	private SiteDao siteDao;
 	
 	public int leaseBike(Map<String,Object> leaseMap) {
 		int l_uuid = 0;
@@ -54,15 +58,15 @@ public class LeaseDaoImpl implements LeaseDao {
 		}catch(Exception e){
 			e.printStackTrace();
 			if(l_uuid != 0){
-				rollback(l_uuid);
+				sqlSessionTemplate.rollback();
 			}
 			return 0;
 		}
 	}
 
 	public String returnBike(Map<String, Object> returnMap) {
-		String deductMoneyInBalance = "com.bike.BikeMapper.deductMoneyInBalance";
-		String getSiteById = "com.bike.Mapper.BikeMapper.getSiteById";
+		String deductMoneyInBalance = "com.bike.LeaseMapper.deductMoneyInBalance";
+		String getSiteById = "com.bike.Mapper.SiteMapper.getSiteByUuid";
 		Site site = sqlSessionTemplate.selectOne(getSiteById, returnMap.get("s_uuid"));
 		String returnBike = "com.bike.Mapper.LeaseMapper.returnBike";
 		String updateBike = "com.bike.Mapper.LeaseMapper.updateBike_returnBike";
@@ -80,7 +84,7 @@ public class LeaseDaoImpl implements LeaseDao {
 			return "yes";
 		}catch(Exception e){
 			e.printStackTrace();
-			rollback(1);
+			sqlSessionTemplate.rollback();
 			return "error";
 		}
 	}
@@ -99,10 +103,10 @@ public class LeaseDaoImpl implements LeaseDao {
 		return lease;
 	}
 	
-	public void rollback(int l_uuid){
-		String statement = "com.bike.Mapper.LeaseMapper.deleteLeaseBike";
-		sqlSessionTemplate.delete(statement, l_uuid);
-	}
+//	public void rollback(int l_uuid){
+//		String statement = "com.bike.Mapper.LeaseMapper.deleteLeaseBike";
+//		sqlSessionTemplate.delete(statement, l_uuid);
+//	}
 
 	public Page showLeaseBike(Map<String, Object> pageMap) {
 		Long totalCount = pageDao.selectLeaseBikeTotalCount(Integer.parseInt(pageMap.get("u_uuid").toString()));
@@ -116,6 +120,11 @@ public class LeaseDaoImpl implements LeaseDao {
 		for(int i=0;i<lease.size();i++) {
 			Bike bike = bikeDao.getBikeByUuid(Integer.parseInt(lease.get(i).getBike().getB_uuid())).get(0);
 			lease.get(i).setBike(bike);
+			Site leaseSite = siteDao.getSiteByUuid(Integer.parseInt(lease.get(i).getL_leaseSite().getS_uuid()));
+			Site returnSite = siteDao.getSiteByUuid(Integer.parseInt(lease.get(i).getL_returnSite().getS_uuid()));
+			lease.get(i).setBike(bike);
+			lease.get(i).setL_leaseSite(leaseSite);
+			lease.get(i).setL_returnSite(returnSite);
 		}
 		page.setListObject(lease);
 		return page;

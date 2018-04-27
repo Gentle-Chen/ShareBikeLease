@@ -52,7 +52,7 @@ public class BikeDaoImpl implements BikeDao{
 			
 
 	public Page getAllBikeByPage(Map<String,Object> pageMap){
-		Long totalCount = pageDao.selectBikeTotalCount(null);
+		Long totalCount = pageDao.selectBikeTotalCount(pageMap);
 		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
 		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
         Page page = new Page(pageSize, totalCount.intValue());

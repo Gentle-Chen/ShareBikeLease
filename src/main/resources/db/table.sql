@@ -53,17 +53,19 @@ create table b_bike
     s_uuid int not null, -- 1代表在使用中,没有停靠站点.其他则代表站点ID 
 	foreign key (s_uuid) references b_site(s_uuid)
 );
- insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
- insert into b_bike values ('3','003','0','2');insert into b_bike values ('4','004','0','2');
- insert into b_bike values ('5','005','0','3');insert into b_bike values ('6','006','0','3');
- insert into b_bike values ('7','007','0','4');insert into b_bike values ('8','008','0','4');
+ -- insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
+ -- insert into b_bike values ('3','003','0','2');insert into b_bike values ('4','004','0','2');
+ -- insert into b_bike values ('5','005','0','3');insert into b_bike values ('6','006','0','3');
+ -- insert into b_bike values ('7','007','0','4');insert into b_bike values ('8','008','0','4');
+ -- insert into b_bike values ('9','009','0','2');insert into b_bike values ('10','010','0','4');
  -- insert into b_bike values ('5','0','3');insert into b_bike values ('6','0','3');
 -- delete from b_bike;
 -- select * from b_bike  where b_status != 1;
 -- select count(*) from b_bike where s_uuid = '3';
 -- select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid order by a.b_uuid limit 0,2;
 -- select a.*,b.s_name from b_bike a, b_site b where b_status != 1 and a.s_uuid = b.s_uuid;
-select * from b_bike a, b_site b where  (a.s_uuid = '1' or  a.s_uuid = '4') and b_status != 1 and a.s_uuid = b.s_uuid and b_status = '0'
+select * from b_bike a, b_site b where  (a.s_uuid = '2' or  a.s_uuid = '4') and b_status != 1 and a.s_uuid = b.s_uuid and b_status = '0';
+select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid and b_status = '0';
 
 create table b_lease
 (
@@ -76,8 +78,12 @@ create table b_lease
     l_money_status varchar(2) not null default 0, -- 0代表未支付，1代表已支付
     u_uuid int not null,
     b_uuid int not null,
+	l_leaseSite int ,
+    l_returnSite int default 1,
     foreign key (u_uuid) references b_user(u_uuid),
-    foreign key (b_uuid) references b_bike(b_uuid)
+    foreign key (b_uuid) references b_bike(b_uuid),
+    foreign key (l_leaseSite) references b_site(s_uuid),
+    foreign key (l_returnSite) references b_site(s_uuid)
 );
 -- alter table b_lease modify l_id int auto_increment;
 -- select * from b_lease;

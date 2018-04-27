@@ -9,7 +9,9 @@ function locat(){
 //			  var active = {
 //					  
 //					  notice: function(){
-					  var b_uuid = $('#leaseBtn').val();
+					  var bs = $('#leaseBtn').val();
+					  var b_uuid = bs.split(",")[0];
+					  var s_uuid = bs.split(",")[1];
 						layer.open({
 						    time: 0 //不自动关闭
 						    ,title: '提示'
@@ -19,7 +21,7 @@ function locat(){
 						    ,btn: ['确定', '取消']
 						    ,yes: function(index){
 						        $.ajax({
-						            url:getContextPath()+'/lease/'+b_uuid,
+						            url:getContextPath()+'/lease/'+b_uuid+'/'+s_uuid,
 						            data:b_uuid,
 						            type:"POST",
 						            dataType:"json",

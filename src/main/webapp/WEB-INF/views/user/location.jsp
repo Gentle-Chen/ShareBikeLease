@@ -135,7 +135,7 @@
 									<td>
 										<c:choose>
 											<c:when test="${bike.b_status == '0' }">
-												<button id="leaseBtn" value="${bike.b_uuid }" data-method="notice" 
+												<button id="leaseBtn" value="${bike.b_uuid },${bike.site.s_uuid }" data-method="notice" 
 												class="btn btn-sm btn-success "  style="background: blue;border-color:blue "
 												onclick="locat()">
 													<span class="glyphicon glyphicon-edit"></span>

@@ -135,6 +135,8 @@
 									<th>单车编号</th>
 									<th>租赁时间</th>
 									<th>归还时间</th>
+									<th>租赁站点</th>
+									<th>归还站点</th>
 									<th>金额</th>
 									<th>是否归还</th>
 									<th>操作</th>
@@ -153,6 +155,15 @@
 				  							--
 				  						</c:if>
 			  						</td>
+			  						<td>${lease.l_leaseSite.s_name}</td>
+				  					<td>
+				  						<c:if test="${lease.l_returnSite.s_uuid == 1}">
+				  							--
+				  						</c:if>
+				  						<c:if test="${lease.l_returnSite.s_uuid != 1}">
+				  							${lease.l_returnSite.s_name}
+				  						</c:if>
+			  						</td>
 				  					<td>
 				  						<c:if test="${lease.l_status == 0}">
 				  							--
@@ -165,7 +176,7 @@
 				  						<c:if test="${lease.l_status == 0}">
 				  							未归还
 				  						</c:if>
-				  						<c:if test="${lease.l_status} == 1}">
+				  						<c:if test="${lease.l_status == 1}">
 				  							已归还
 				  						</c:if>
 				  					</td>
@@ -222,19 +233,19 @@
 												<SELECT id="siteSelect" name="siteSelect" style="display:inline;width:30%" class="form-control">
 													<option value="0">请选择</option>
 												</SELECT>
-												<p id="siteError" class="mark" style="display: none;"><spring:message code="invalid_email_tips" text="该站点已无空余位子可供停车"/></p>
-												<p id="siteNotEmpty" class="mark" style="display: none;"><spring:message code="invalid_email_tips" text="请选择站点"/></p>
+												<label id="siteError" class="label_one" style="display: none;color:red;"><spring:message code="invalid_email_tips" text="该站点已无空余位子可供停车"/></label>
+												<label id="siteNotEmpty" class="label_one" style="display: none;color:red;"><spring:message code="invalid_email_tips" text="请选择站点"/></label>
 
 										</div>
 									</div>
 									<div class="modal-footer ">
 <!-- 										<button type="button" class="btn btn-default" -->
 <!-- 											data-dismiss="modal">close</button> -->
-											<button id="returnBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  
-													style="background: blue;border-color:blue ">
-													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-														确定归还
-												</button>
+<%-- 											<button id="returnBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "   --%>
+<!-- 													style="background: blue;border-color:blue "> -->
+<!-- 													<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
+<!-- 														确定归还 -->
+<!-- 												</button> -->
 <%-- 										<button id="returnBtn" value="${bike.b_uuid }" data-method="notice"  --%>
 <!-- 										class="btn btn-sm btn-success "  style="background: blue;border-color:blue "></button> -->
 										<input type="button" onclick="returnBike()"   class="form-control" value="确定归还" id="returnBtn" >

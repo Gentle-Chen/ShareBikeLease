@@ -30,26 +30,40 @@
              <result column="l_returnTime" property="l_returnTime" jdbcType="VARCHAR" />
              <result column="l_money" property="l_money" jdbcType="DECIMAL" />
              <result column="l_status" property="l_status" jdbcType="VARCHAR" />
-         <association property="user" javaType="com.bike.Dto.User">
-             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
-             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
-             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
-             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
-             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
-        </association>
-         <association property="bike" javaType="com.bike.Dto.Bike">
-             <result column="b_uuid" property="b_uuid" jdbcType="VARCHAR" />
-             <result column="b_id" property="b_id" jdbcType="VARCHAR" />
-             <result column="b_status" property="b_status" jdbcType="VARCHAR" />
-            <association property="site" javaType="com.bike.Dto.Site">
-             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
-        </association>
-        </association>
+	         <association property="user" javaType="com.bike.Dto.User">
+	             <result column="u_uuid" property="u_uuid" jdbcType="VARCHAR" />
+	             <result column="u_email" property="u_email" jdbcType="VARCHAR" />
+	             <result column="u_name" property="u_name" jdbcType="VARCHAR" />
+	             <result column="u_id_number" property="u_id_number" jdbcType="VARCHAR" />
+	             <result column="u_balance" property="u_balance" jdbcType="DECIMAL" />
+	        </association>
+	         <association property="bike" javaType="com.bike.Dto.Bike">
+	             <result column="b_uuid" property="b_uuid" jdbcType="VARCHAR" />
+	             <result column="b_id" property="b_id" jdbcType="VARCHAR" />
+	             <result column="b_status" property="b_status" jdbcType="VARCHAR" />
+	            <association property="site" javaType="com.bike.Dto.Site">
+	             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+	        	</association>
+	        </association>
+	        <association property="l_leaseSite" javaType="com.bike.Dto.Site">
+	         	 <result column="l_leaseSite" property="s_uuid" jdbcType="VARCHAR" />
+	             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+	             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+	             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+	             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+	        </association>
+	        <association property="l_returnSite" javaType="com.bike.Dto.Site">
+	        	 <result column="l_returnSite" property="s_uuid" jdbcType="VARCHAR" />
+	             <result column="s_name" property="s_name" jdbcType="VARCHAR" />
+	             <result column="s_longitude" property="s_longitude" jdbcType="VARCHAR" />
+	             <result column="s_latitude" property="s_latitude" jdbcType="VARCHAR" />
+	             <result column="s_capacity" property="s_capacity" jdbcType="VARCHAR" />
+	        </association>
   </resultMap>
 	
      <!-- lease bike -->
      <insert id="leaseBike" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="l_uuid">
-		insert into b_lease(l_leaseTime,l_status,u_uuid,b_uuid) values (#{l_leaseTime}, #{l_status}, #{u_uuid}, #{b_uuid})
+		insert into b_lease(l_leaseTime,l_leaseSite,l_status,u_uuid,b_uuid) values (#{l_leaseTime},#{l_leaseSite}, #{l_status}, #{u_uuid}, #{b_uuid})
 	</insert>
     <update id="updateBike_leaseBike" parameterType="java.util.HashMap">
 		update b_bike 
@@ -89,7 +103,7 @@
      <update id="returnBike" parameterType="java.util.HashMap">
 		update b_lease
     		<set>
-    			l_status = #{l_status} , l_returnTime = #{l_returnTime} ,l_money = #{l_money} 
+    			l_status = #{l_status} , l_returnTime = #{l_returnTime} ,l_returnSite = #{s_uuid},l_money = #{l_money} 
     		</set>
     		where l_uuid = #{l_uuid}
      </update>
