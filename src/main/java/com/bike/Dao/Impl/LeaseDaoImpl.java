@@ -7,6 +7,7 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bike.Constant.GlobalConstants;
 import com.bike.Dao.BikeDao;
@@ -33,6 +34,8 @@ public class LeaseDaoImpl implements LeaseDao {
 	@Autowired
 	private SiteDao siteDao;
 	
+	
+	@Transactional
 	public int leaseBike(Map<String,Object> leaseMap) {
 		int l_uuid = 0;
 		String getBikeByUuid = "com.bike.Mapper.BikeMapper.getBikeByUuid";
@@ -44,23 +47,29 @@ public class LeaseDaoImpl implements LeaseDao {
 		String b_uuid = (String) leaseMap.get("b_uuid");
 		Bike bike = sqlSessionTemplate.selectOne(getBikeByUuid, Integer.parseInt(b_uuid));
 		String s_uuid = bike.getSite().getS_uuid();
-		Site site = sqlSessionTemplate.selectOne(getSiteByUuid, Integer.parseInt(s_uuid));
-		bikeMap.put("b_status",GlobalConstants.bike_using_status);
-		bikeMap.put("b_uuid",leaseMap.get("b_uuid"));
-		bikeMap.put("s_uuid",GlobalConstants.bike_using_nosite);
-		
-		try{
-			sqlSessionTemplate.insert(leaseBike,leaseMap);
-			l_uuid = Integer.parseInt(leaseMap.get("l_uuid").toString());
-			sqlSessionTemplate.update(updateBike,bikeMap);
-			sqlSessionTemplate.update(updateSite,site);
-			return l_uuid;
-		}catch(Exception e){
-			e.printStackTrace();
-			if(l_uuid != 0){
-				sqlSessionTemplate.rollback();
+		if(s_uuid == "1" || s_uuid.equals("1")) {
+			return -1;
+		}else {
+			s_uuid = leaseMap.get("l_leaseSite").toString();
+			Site site = sqlSessionTemplate.selectOne(getSiteByUuid, Integer.parseInt(s_uuid));
+			bikeMap.put("b_status",GlobalConstants.bike_using_status);
+			bikeMap.put("b_uuid",leaseMap.get("b_uuid"));
+			bikeMap.put("s_uuid",GlobalConstants.bike_using_nosite);
+			
+			try{
+				sqlSessionTemplate.insert(leaseBike,leaseMap);
+				l_uuid = Integer.parseInt(leaseMap.get("l_uuid").toString());
+				sqlSessionTemplate.update(updateBike,bikeMap);
+				sqlSessionTemplate.update(updateSite,site);
+				return l_uuid;
+			}catch(Exception e){
+				e.printStackTrace();
+				if(l_uuid != 0){
+//					sqlSessionTemplate.rollback();
+					sqlSessionTemplate.getSqlSessionFactory().openSession().rollback();
+				}
+				return 0;
 			}
-			return 0;
 		}
 	}
 

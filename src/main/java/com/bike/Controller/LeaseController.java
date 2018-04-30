@@ -58,7 +58,7 @@ public class LeaseController {
 		}
 		User u = userDao.checkMoney(Integer.parseInt(user.getU_uuid()), 0);
 		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
-		if(deposit.getD_status().equals(GlobalConstants.deposit_no_pay)) {
+		if(deposit == null || deposit.getD_status().equals(GlobalConstants.deposit_no_pay)) {
 			json.put("result", GlobalConstants.deposit_no_pay);
 //		}
 //		if(u == null) {
@@ -71,12 +71,15 @@ public class LeaseController {
 			map.put("l_leaseTime",TimeUtil.timeStampChangeTime(new Date().getTime()));
 			map.put("l_status",GlobalConstants.lease_no_return);
 			int l_uuid = leaseDao.leaseBike(map);
-			Lease leaseBike = leaseDao.getLeaseBikeByUUID(l_uuid).get(0);
-//			JSONObject json = (JSONObject) JSON.toJSON(leaseBike);
-			json.put("result", GlobalConstants.success);
-			json.put("l_uuid", leaseBike.getL_uuid());
+			if(l_uuid == -1) {
+				json.put("result", GlobalConstants.bike_status_conflict);
+			}else {
+				Lease leaseBike = leaseDao.getLeaseBikeByUUID(l_uuid).get(0);
+//				JSONObject json = (JSONObject) JSON.toJSON(leaseBike);
+				json.put("result", GlobalConstants.success);
+				json.put("l_uuid", leaseBike.getL_uuid());
+			}
 		}
-		
 		return json.toJSONString();
 	}
 	@RequestMapping(value="toShowLeaseBike/{l_uuid}",method=RequestMethod.GET)

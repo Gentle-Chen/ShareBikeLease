@@ -81,5 +81,10 @@ public final class GlobalConstants {
 		 *   check money error code
 		 */
 	    public static final String not_enough_money = "50001";
+	    
+	    /**
+		 *   bike status conflict
+		 */
+	    public static final String bike_status_conflict = "60001";
 }
 	

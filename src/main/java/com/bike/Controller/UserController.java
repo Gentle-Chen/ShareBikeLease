@@ -190,8 +190,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="located")
-	public ModelAndView located(){
+	public ModelAndView located(HttpServletRequest request){
 		ModelAndView mv = new ModelAndView("user/located");
+		UserSessionHelper.getUserLoginUUID(request.getSession());
+		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+		mv.addObject("User",user);
 		return mv;
 	}
 	

@@ -55,11 +55,25 @@ function locat(){
 							            				 });
 							            				}
 							            			});
-							           			 }else{
+							           			 }else if(data["result"] == "60001" ){
 							           				layer.open({
 								            			title: '提示'
 								            			,area: '300px;'
 								            			,id: 'LAY_layuipro3'
+								    					,btn: ['确定', '取消']
+								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">当前单车已被使用</div>'
+								            			,success: function(layero){
+								            				 var btn = layero.find('.layui-layer-btn');
+								            				 btn.find('.layui-layer-btn0').attr({
+								 					        	href : getContextPath()+'/user/located'
+								            				 });
+								            				}
+								            			});
+							           			 }else{
+							           				layer.open({
+								            			title: '提示'
+								            			,area: '300px;'
+								            			,id: 'LAY_layuipro4'
 								    					,btn: ['确定', '取消']
 								            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚未缴纳押金，请先缴纳押金</div>'
 								            			,success: function(layero){
@@ -69,7 +83,7 @@ function locat(){
 								            				 });
 								            				}
 								            			});
-							           				 }
+							           			 }
 						            	}
 						            	
 						           			 }
