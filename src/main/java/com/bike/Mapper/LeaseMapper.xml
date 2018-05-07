@@ -114,13 +114,6 @@
     		</set>
     		where u_uuid = #{u_uuid}
      </update>
-<!--      <update id="deductMoneyInDeposit" parameterType="java.util.HashMap"> -->
-<!-- 		update b_deposit -->
-<!--     		<set> -->
-<!--     			d_money = #{d_money}-#{l_money} -->
-<!--     		</set> -->
-<!--     		where d_uuid = #{d_uuid} -->
-<!--      </update> -->
      
      
      

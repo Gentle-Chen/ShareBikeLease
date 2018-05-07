@@ -20,7 +20,7 @@
  		<script src="/ShareBikeLease/js/lease.js" charset="utf-8"></script>
 		<script type="text/javascript">	
 		$(document).ready(function(){
-			pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page2");
+			pageStr = genPaginationFooter(${item.totalCount}, ${item.currentPage},${item.pageSize},"page3");
 			$('#foot_page_div').html(pageStr);
 		});
 		

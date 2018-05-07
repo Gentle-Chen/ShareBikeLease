@@ -125,6 +125,9 @@ public class LeaseController {
 		String returnTime = TimeUtil.timeStampChangeTime(new Date().getTime());
 		double money = TimeUtil.caculate(TimeUtil.timeChangeTimeStamp(returnTime),TimeUtil.timeChangeTimeStamp(leaseTime));
 		money = Math.round(money);
+		if(money < 1.00) {
+			money = 1.00;
+		}
 		
 		Map<String,Object> returnMap = new HashMap<String,Object>();
 		returnMap.put("l_money", money);

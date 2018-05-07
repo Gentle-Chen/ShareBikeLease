@@ -75,6 +75,8 @@ function leaseBike(u_uuid,b_uuid){
 }
 
 function returnBike_getSite(l_uuid,b_uuid,u_uuid){
+	$("#siteSelect").html("");
+	$("#siteSelect").append('<option value="0">请选择</option>');
 	$("#l_uuid").val(l_uuid);
 	$("#b_uuid").val(b_uuid);
 	$("#u_uuid").val(u_uuid);
@@ -232,6 +234,16 @@ function page2(pageNum){
 	if (site != ""){
 		url = url + "&site=" + site;
 	}
+	window.location = url;
+}
+
+function page3(pageNum){
+	var b_status = $.trim($("#b_status").val());
+	var startTime = $.trim($("#startTime").val());
+	var endTime = $.trim($("endTime").val());
+	var site = $.trim($("#site").val());
+	var site1 = $("#site1").val();
+	var url = getContextPath() + "/user/order/?pageNum=" + pageNum;
 	window.location = url;
 }
 
