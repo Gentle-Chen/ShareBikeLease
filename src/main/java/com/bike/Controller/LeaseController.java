@@ -49,21 +49,24 @@ public class LeaseController {
 		
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
-		List<Lease> l = leaseDao.getLeaseBike(Integer.parseInt(user.getU_uuid()));
-		for(int i=0;i<l.size();i++) {
-			if(l.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
-				json.put("result", GlobalConstants.lease_no_return);
-				return json.toJSONString();
-			}
-		}
+		
 		User u = userDao.checkMoney(Integer.parseInt(user.getU_uuid()), 0);
 		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
 		if(deposit == null || deposit.getD_status().equals(GlobalConstants.deposit_no_pay)) {
 			json.put("result", GlobalConstants.deposit_no_pay);
-//		}
-//		if(u == null) {
-//			json.put("result", GlobalConstants.not_enough_money);
+			json.put("msg", "您尚未缴纳押金，请先缴纳押金");
+			json.put("type", "deposit");
 		}else {
+			List<Lease> l = leaseDao.getLeaseBike(Integer.parseInt(user.getU_uuid()));
+			for(int i=0;i<l.size();i++) {
+				if(l.get(i).getL_status().equals(GlobalConstants.lease_no_return)) {
+					json.put("result", GlobalConstants.lease_no_return);
+					json.put("msg", "存在未结算订单，请先结算");
+					json.put("type", "order");
+					return json.toJSONString();
+				}
+			}
+			
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("b_uuid",b_uuid);
 			map.put("l_leaseSite",s_uuid);
@@ -80,6 +83,19 @@ public class LeaseController {
 				json.put("l_uuid", leaseBike.getL_uuid());
 			}
 		}
+		
+		
+		
+//		User u = userDao.checkMoney(Integer.parseInt(user.getU_uuid()), 0);
+//		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
+//		if(deposit == null || deposit.getD_status().equals(GlobalConstants.deposit_no_pay)) {
+//			json.put("result", GlobalConstants.deposit_no_pay);
+//		}
+//		if(u == null) {
+//			json.put("result", GlobalConstants.not_enough_money);
+//		}else {
+//			
+//		}
 		return json.toJSONString();
 	}
 	@RequestMapping(value="toShowLeaseBike/{l_uuid}",method=RequestMethod.GET)

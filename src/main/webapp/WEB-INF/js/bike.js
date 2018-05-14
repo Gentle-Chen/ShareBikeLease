@@ -3,6 +3,23 @@
  */
 
 $(document).ready(function(){
+	var site = $('#site').val();
+	if(site == "" || site == undefined){
+		$('#siteDiv').hide();
+	}else{
+		$('#siteDiv').show();
+		$('#timeDiv').hide();
+	}
+	
+	var startTime = $('#startTime').val();
+	var endTime = $('#endTime').val();
+	if(startTime == "" || startTime == undefined){
+		$('#timeDiv').hide();
+	}else{
+		$('#timeDiv').show();
+		$('#siteDiv').hide();
+	}
+	
 		$('#b_status').mouseleave(function(){
 			var b_status = $('#b_status').val();
 			if(b_status == '' || b_status == '3' ||b_status == '4' || b_status == '5'){

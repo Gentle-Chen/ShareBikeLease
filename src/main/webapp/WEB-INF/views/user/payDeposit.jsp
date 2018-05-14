@@ -64,14 +64,14 @@
 				<c:if test="${deposit.d_status == '1' }">
 					是
 				</c:if>
-				<c:if test="${deposit.d_status == '0' }">
+				<c:if test="${deposit.d_status == '0' || deposit == null}">
 					否
 					<p>需缴纳押金：<span>200  元</span></p>
 				</c:if>
 			</span></p><br />
 			
 		</div>
-		<c:if test="${deposit.d_status == '0' }">
+		<c:if test="${deposit.d_status == '0' || deposit == null}">
 			<div class="tr_paybox"> 
 				
 					<input id="payDepositBtn" type="button" value="缴纳" class="tr_pay am-btn" onclick="payDeposit('${User.u_uuid}')"/>

@@ -110,7 +110,7 @@
      <update id="deductMoneyInBalance" parameterType="java.util.HashMap">
 		update b_user
     		<set>
-    			u_balance = #{u_balance}-#{l_money}
+    			u_balance = u_balance-#{l_money}
     		</set>
     		where u_uuid = #{u_uuid}
      </update>

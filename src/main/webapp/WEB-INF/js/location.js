@@ -32,12 +32,19 @@ function locat(){
 						            			,area: '300px;'
 						            			,id: 'LAY_layuipro1'
 						    					,btn: ['确定', '取消']
-						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">存在未结算订单，请先结算</div>'
+						            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">'+data["msg"]+'</div>'
 						            			,success: function(layero){
 						            				 var btn = layero.find('.layui-layer-btn');
-						            				 btn.find('.layui-layer-btn0').attr({
-						 					        	href : getContextPath()+'/user/order'
-						            				 });
+						            				 if(data["type"] == "order"){
+						            					 btn.find('.layui-layer-btn0').attr({
+								 					        	href : getContextPath()+'/user/order'
+								            				 });
+						            				 }else{
+						            					 btn.find('.layui-layer-btn0').attr({
+								 					        	href : getContextPath()+'/user/deposit'
+								            				 });
+						            				 }
+						            				 
 						            				}
 						            			});
 						            	}else{

@@ -53,11 +53,11 @@ create table b_bike
     s_uuid int not null, -- 1代表在使用中,没有停靠站点.其他则代表站点ID 
 	foreign key (s_uuid) references b_site(s_uuid)
 );
- -- insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
+--  insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
  -- insert into b_bike values ('3','003','0','2');insert into b_bike values ('4','004','0','2');
- -- insert into b_bike values ('5','005','0','3');insert into b_bike values ('6','006','0','3');
+--  insert into b_bike values ('5','005','0','3');insert into b_bike values ('6','006','0','3');
  -- insert into b_bike values ('7','007','0','4');insert into b_bike values ('8','008','0','4');
- -- insert into b_bike values ('9','009','0','2');insert into b_bike values ('10','010','0','4');
+--  insert into b_bike values ('9','009','0','2');insert into b_bike values ('10','010','0','4');
  -- insert into b_bike values ('5','0','3');insert into b_bike values ('6','0','3');
 -- delete from b_bike;
 -- select * from b_bike  where b_status != 1;
@@ -100,6 +100,7 @@ create table b_deposit   -- 押金表 --
     foreign key (u_uuid) references b_user(u_uuid)
 );
 insert into b_deposit values ('1','1','500','1');
+insert into b_deposit values ('2','1','500','2');
 -- drop table b_deposit;
 -- insert into b_deposit values ('1','0','jintao02');
 -- select * from b_deposit;
