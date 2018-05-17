@@ -72,12 +72,16 @@
 			  				</div>
 			  			</div>
 			  		</div>			  		
-			  	</div>			  	
+			  	</div>	
 			  </div>
 		</div>
+		
 	</div>
-	</div>
-	
-    <jsp:include page="/WEB-INF/views/common/footer.jsp" flush="true" />
+  </div>
+	<div class="bottom" style="width:100%;background-color:#053391;min-width:1260px;float:left;margin-top: -100px">
+  <div class="footer" style="color:#fff;margin:0px;height:95px;width:1260px;text-align:center;line-height:95px" >
+    <p>Copyright © 2018 HaFu. All Rights Reserved 津ICP备666666号-6</p>	
+</div>
+</div>
 </body>
 </html>
