@@ -114,6 +114,24 @@ function payDeposit(u_uuid){
            				}
         			});
         		});
+        	}else{
+        		layui.use('layer', function(){ //独立版的layer无需执行这一句
+	      			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+      		layer.open({
+      		    time: 0 //不自动关闭
+      		    ,title: '提示'
+      		    ,area: '300px;'
+      		    ,shade: [0.8, '#393D49']
+      		    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">余额不足，请前往充值</div>'
+      		    ,btn: ['确定']
+	        		,success: function(layero){
+         				 var btn = layero.find('.layui-layer-btn');
+         				 btn.find('.layui-layer-btn0').attr({
+					        	href : getContextPath()+'/user/recharge'
+         				 });
+         				}
+      			});
+      		});
         	}
         }
         	
@@ -152,6 +170,24 @@ function returnDeposit(u_uuid){
            				}
         			});
         		});
+        	}else{
+        		layui.use('layer', function(){ //独立版的layer无需执行这一句
+	      			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+      		layer.open({
+      		    time: 0 //不自动关闭
+      		    ,title: '提示'
+      		    ,area: '300px;'
+      		    ,shade: [0.8, '#393D49']
+      		    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">您尚有未结算的订单</div>'
+      		    ,btn: ['确定']
+	        		,success: function(layero){
+         				 var btn = layero.find('.layui-layer-btn');
+         				 btn.find('.layui-layer-btn0').attr({
+					        	href : getContextPath()+'/user/order'
+         				 });
+         				}
+      			});
+      		});
         	}
         }
         	

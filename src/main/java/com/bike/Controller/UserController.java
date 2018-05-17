@@ -68,9 +68,9 @@ public class UserController {
 	@RequestMapping(value="/regist",method=RequestMethod.POST)
 	public String regist(User u, HttpServletRequest request){
 		if(u.getU_sex().equals("0")){
-			u.setU_sex("��");
+			u.setU_sex("男");
 		}else{
-			u.setU_sex("Ů");
+			u.setU_sex("女");
 		}
 		User user = userDao.regist(u);
 		if(user != null){
@@ -371,13 +371,16 @@ public class UserController {
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
 		JSONObject json = new JSONObject();
-		int i = userDao.payDeposit(user);
-		if(i>1) {
-			json.put("result", GlobalConstants.success);
-		}else{
-			
+		if(user.getU_balance()<200) {
+			json.put("result", GlobalConstants.not_enough_money);
+		}else {
+			int i = userDao.payDeposit(user);
+			if(i>1) {
+				json.put("result", GlobalConstants.success);
+			}else{
+				
+			}
 		}
-		
 		return json.toJSONString();
 	}
 	
@@ -387,12 +390,33 @@ public class UserController {
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
 		JSONObject json = new JSONObject();
-		int i = userDao.returnDeposit(user);
-		if(i>1) {
-			json.put("result", GlobalConstants.success);
-		}else{
-			
+		List<Lease> lease = leaseDao.getLeaseBike(Integer.parseInt(user.getU_uuid()));
+		boolean flag = false;
+		if(lease == null || lease.size() == 0) {
+			int i = userDao.returnDeposit(user);
+			if(i>1) {
+				json.put("result", GlobalConstants.success);
+			}else{
+				
+			}
+		}else {
+			for(int i=0;i<lease.size();i++) {
+				Lease l = lease.get(i);
+				if(l.getL_status().equals(GlobalConstants.lease_no_return)) {
+					json.put("result", GlobalConstants.lease_no_return);
+					flag = true;
+				}
+			}
 		}
+		if(!flag) {
+			int i = userDao.returnDeposit(user);
+			if(i>1) {
+				json.put("result", GlobalConstants.success);
+			}else{
+				
+			}
+		}
+		
 		return json.toJSONString();
 	}
 	
