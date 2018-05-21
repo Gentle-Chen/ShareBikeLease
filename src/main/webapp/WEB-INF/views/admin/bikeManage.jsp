@@ -108,8 +108,19 @@
 			            dataType:"json",
 			            success:function(data){
 			            	if ( data["result"] == "success" ){
-			            		var othis = $(this), method = othis.data('method');
-							    active[method] ? active[method].call(this, othis) : '';
+			            		layer.open({
+			            			title: '提示'
+			            			,area: '300px;'
+			            			,id: 'LAY_layuipro'
+			    					,btn: ['确定', '取消']
+			            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">单车已送往维修</div>'
+			            			,success: function(layero){
+			            				 var btn = layero.find('.layui-layer-btn');
+			            				 btn.find('.layui-layer-btn0').attr({
+			 					        	href : getContextPath()+'/bike/bikeManage'
+			            				 });
+			            				}
+			            			});
 		           			 }
 		           			}
 		       			  });
@@ -214,11 +225,11 @@
 										</c:choose>
 									</td>
 									<td>
-										<c:if test="${bike.b_status == '0' }">
-											<button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal" id="${bike.b_uuid}" data-target=".edit-app-modal" aria-expanded="false">
-                                               	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                	修改
-                                             </button>
+										<c:if test="${bike.b_status == '0' }">--
+<%-- 											<button type="button" class="collapsed btn btn-success btn-sm"  data-toggle="modal" id="${bike.b_uuid}" data-target=".edit-app-modal" aria-expanded="false"> --%>
+<!--                                                	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> -->
+<!--                                                 	修改 -->
+<!--                                              </button> -->
 										</c:if>
 										<c:if test="${bike.b_status == '1' }">--
 										</c:if>

@@ -92,7 +92,7 @@ public class BikeDaoImpl implements BikeDao{
 
 
 	public Page countOtherBike(Map<String, Object> pageMap) {
-		pageMap.put("b_status", GlobalConstants.bike_free_status) ;
+//		pageMap.put("b_status", GlobalConstants.bike_free_status) ;
 		Long totalCount = pageDao.selectBikeTotalCount(pageMap);
 		int pageNum = Integer.parseInt(pageMap.get("pageNum").toString());
 		int pageSize = Integer.parseInt(pageMap.get("pageSize").toString());
