@@ -47,10 +47,17 @@ public class BikeController {
 	
 	@RequestMapping(value="toAddBike")
 	public ModelAndView toAddBike(HttpServletRequest request){
-		ModelAndView mv = new ModelAndView("admin/addBike");
-		UserSessionHelper.getUserLoginUUID(request.getSession());
-		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
-		mv.addObject("User",user);
+		ModelAndView mv;
+		
+		String a_email = UserSessionHelper.getAdminLoginUUID(request.getSession());
+		if(a_email == null) {
+			mv = new ModelAndView("login");
+		}else{
+			mv = new ModelAndView("admin/addBike");
+			UserSessionHelper.getUserLoginUUID(request.getSession());
+			User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
+			mv.addObject("User",user);
+		}
 		return mv;
 	}
 	@RequestMapping(value="checkBike/{b_id}",method=RequestMethod.GET)
