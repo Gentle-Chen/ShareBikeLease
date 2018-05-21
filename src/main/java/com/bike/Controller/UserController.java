@@ -144,9 +144,9 @@ public class UserController {
 	
 	@RequestMapping(value="updatePassword")
 	public ModelAndView updatePassword(int u_uuid,String newPassword , HttpServletRequest request){
-		ModelAndView mv = new ModelAndView("user/userInfo");
+		ModelAndView mv = new ModelAndView("login");
 		User user = userDao.updatePassword(u_uuid, newPassword);
-		mv.addObject("User",user);
+		UserSessionHelper.userLogout(request.getSession());
 		return mv;
 	}
 	

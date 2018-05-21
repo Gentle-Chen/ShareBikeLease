@@ -190,6 +190,14 @@
      <delete id="deleteBike" parameterType="int">
      	delete from b_bike where b_uuid = #{b_uuid} 
      </delete>
+     <update id="updateSite_deleteBike" parameterType="com.bike.Dto.Site">
+		update b_site 
+    		<set>
+    				s_capacity = #{s_capacity}+1
+    		</set>
+    		where s_uuid = #{s_uuid}
+     </update>
+     
      
      <!-- fix bike -->
      <delete id="fixBike" parameterType="java.util.HashMap">

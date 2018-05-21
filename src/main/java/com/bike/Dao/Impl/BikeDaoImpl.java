@@ -122,8 +122,14 @@ public class BikeDaoImpl implements BikeDao{
 	}
 	
 	public int deleteBike(int b_uuid){
+		String getBikeByUuid = "com.bike.Mapper.BikeMapper.getBikeByUuid";
+		Bike bike = sqlSessionTemplate.selectOne(getBikeByUuid,b_uuid);
+		
 		String statement = "com.bike.Mapper.BikeMapper.deleteBike";
 		int i = sqlSessionTemplate.delete(statement,b_uuid);
+		String statement3 = "com.bike.Mapper.BikeMapper.updateSite_deleteBike";
+		Site site = sqlSessionTemplate.selectOne("com.bike.Mapper.SiteMapper.getSiteByUuid",Integer.parseInt(bike.getSite().getS_uuid()));
+		int j = sqlSessionTemplate.delete(statement3,site);
 		return i;
 	}
 	
