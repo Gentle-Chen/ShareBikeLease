@@ -132,7 +132,7 @@
           </form>	
       </div>
       <div class="right" style="margin-top:70px; height:950px;width:400px; border-left:#ccc solid 1px;">
-        <h2><spring:message code="register_page_have_acccount" text="已有帐号?"/><a class="signin" href="${ctx}/login"><spring:message code="register_page_login_immediately" text="立即登录"/></a></h2>
+        <h2><spring:message code="register_page_have_acccount" text="已有帐号?"/><a class="signin" href="${ctx}/toLogin"><spring:message code="register_page_login_immediately" text="立即登录"/></a></h2>
       </div>
     </div>
   </div>
