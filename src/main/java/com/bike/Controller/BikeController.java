@@ -251,6 +251,7 @@ public class BikeController {
 		Map<String,Object> bikeMap = new HashMap<String,Object>();
 		bikeMap.put("b_status", GlobalConstants.bike_fixing_status);
 		bikeMap.put("b_uuid", b_uuid);
+		bikeMap.put("s_uuid", 1);
 		Bike bike = bikeDao.getBikeByUuid(b_uuid).get(0);
 		int s_uuid = Integer.parseInt(bike.getSite().getS_uuid());
 		Site site = siteDao.getSiteByUuid(s_uuid);

@@ -201,7 +201,7 @@
      
      <!-- fix bike -->
      <delete id="fixBike" parameterType="java.util.HashMap">
-     	update b_bike set b_status = #{b_status} where b_uuid = #{b_uuid} 
+     	update b_bike set b_status = #{b_status},s_uuid = #{s_uuid} where b_uuid = #{b_uuid} 
      </delete>
      <update id="updateSite_fixBike" parameterType="com.bike.Dto.Site">
 		update b_site 

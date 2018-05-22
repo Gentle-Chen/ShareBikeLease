@@ -64,8 +64,8 @@ create table b_bike
 -- select count(*) from b_bike where s_uuid = '3';
 -- select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid order by a.b_uuid limit 0,2;
 -- select a.*,b.s_name from b_bike a, b_site b where b_status != 1 and a.s_uuid = b.s_uuid;
-select * from b_bike a, b_site b where  (a.s_uuid = '2' or  a.s_uuid = '4') and b_status != 1 and a.s_uuid = b.s_uuid and b_status = '0';
-select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid and b_status = '0';
+-- select * from b_bike a, b_site b where  (a.s_uuid = '2' or  a.s_uuid = '4') and b_status != 1 and a.s_uuid = b.s_uuid and b_status = '0';
+-- select * from b_bike as a,b_site as b where a.s_uuid=b.s_uuid and b_status = '0';
 
 create table b_lease
 (
@@ -88,8 +88,8 @@ create table b_lease
 -- alter table b_lease modify l_id int auto_increment;
 -- select * from b_lease;
 -- select * from b_lease where DATEDIFF(l_leaseTime,'2015-11-11')>=0 and DATEDIFF(l_leaseTime,'2018-11-11')<=0
-select a.*,b.u_name,d.s_name from b_lease a, b_user b, b_bike c, b_site d
-     		where a.u_uuid = b.u_uuid and a.b_uuid = c.b_uuid and c.s_uuid = d.s_uuid;
+-- select a.*,b.u_name,d.s_name from b_lease a, b_user b, b_bike c, b_site d
+     		-- where a.u_uuid = b.u_uuid and a.b_uuid = c.b_uuid and c.s_uuid = d.s_uuid;
 
 create table b_deposit   -- 押金表 --
 (
@@ -99,8 +99,8 @@ create table b_deposit   -- 押金表 --
     u_uuid int,
     foreign key (u_uuid) references b_user(u_uuid)
 );
-insert into b_deposit values ('1','1','500','1');
-insert into b_deposit values ('2','1','500','2');
+-- insert into b_deposit values ('1','1','500','1');
+-- insert into b_deposit values ('2','1','500','2');
 -- drop table b_deposit;
 -- insert into b_deposit values ('1','0','jintao02');
 -- select * from b_deposit;

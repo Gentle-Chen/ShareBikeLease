@@ -36,96 +36,16 @@
 		  		});
 		 });
 		
-		 layui.use('layer', function(){ //独立版的layer无需执行这一句
-		  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
-		  //触发事件
-		  var active = {
+// 		 layui.use('layer', function(){ //独立版的layer无需执行这一句
+// 		  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+		  
+// 			  $('#deleteBtn').on('click', function(){
 				  
-			  notice: function(){
-				  var b_uuid = $('#deleteBtn').val();
-					layer.open({
-					    time: 0 //不自动关闭
-					    ,title: '提示'
-					    ,area: '300px;'
-					    ,shade: [0.8, '#393D49']
-					    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">确定删除？</div>'
-					    ,btn: ['确定', '取消']
-					    ,yes: function(index){
-					        $.ajax({
-					            url:getContextPath()+'/bike/delete/'+b_uuid,
-					            data:b_uuid,
-					            type:"Post",
-					            dataType:"json",
-					            success:function(data){
-					            	if ( data["result"] == "success" ){
-					            		layer.open({
-					            			title: '提示'
-					            			,area: '300px;'
-					            			,id: 'LAY_layuipro'
-					    					,btn: ['确定', '取消']
-					            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">删除成功</div>'
-					            			,success: function(layero){
-					            				 var btn = layero.find('.layui-layer-btn');
-					            				 btn.find('.layui-layer-btn0').attr({
-					 					        	href : getContextPath()+'/bike/bikeManage'
-					            				 });
-					            				}
-					            			});
-					           			 }
-					           			}
-					       			  });
-					   				 }
-								});
-			    			},
-		  
-						  notice_fix: function(){
-							  var b_uuid = $('#fixBtn').val();
-								layer.open({
-								    time: 0 //不自动关闭
-								    ,title: '提示'
-								    ,area: '300px;'
-								    ,shade: [0.8, '#393D49']
-								    ,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">已送往检修</div>'
-								    ,btn: ['确定', '取消']
-									,yes: function(index){
-										href:getContextPath()+'/bike/bikeManage'
-							   		 }
-								});
-						  }
-		 	   		}
-		  
-			  $('#deleteBtn').on('click', function(){
-				    var othis = $(this), method = othis.data('method');
-				    active[method] ? active[method].call(this, othis) : '';
-				  });
+// 				  });
 			  
-			  $('#fixBtn').on('click', function(){
-				  var b_uuid = $('#fixBtn').val();
-				  	$.ajax({
-			            url:getContextPath()+'/bike/fix/'+b_uuid,
-			            data:b_uuid,
-			            type:"Post",
-			            dataType:"json",
-			            success:function(data){
-			            	if ( data["result"] == "success" ){
-			            		layer.open({
-			            			title: '提示'
-			            			,area: '300px;'
-			            			,id: 'LAY_layuipro'
-			    					,btn: ['确定', '取消']
-			            			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">单车已送往维修</div>'
-			            			,success: function(layero){
-			            				 var btn = layero.find('.layui-layer-btn');
-			            				 btn.find('.layui-layer-btn0').attr({
-			 					        	href : getContextPath()+'/bike/bikeManage'
-			            				 });
-			            				}
-			            			});
-		           			 }
-		           			}
-		       			  });
-				  });
-		});
+// 			  $('#fixBtn').on('click', function(){
+				  
+// 				  });
 		 
 		</script>
 		<style type="text/css">
@@ -234,7 +154,7 @@
 										<c:if test="${bike.b_status == '1' }">--
 										</c:if>
 										<c:if test="${bike.b_status == '2' }">
-											<button id="fixBtn" value="${bike.b_uuid }" data-method="notice_fix" class="btn btn-sm btn-success "  style="background: blue;border-color:blue ">
+											<button id="fixBtn" value="${bike.b_uuid }" onclick="fixBike()"  class="btn btn-sm btn-success "  style="background: blue;border-color:blue ">
                                                	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                                 	修理
                                              </button>
@@ -249,7 +169,7 @@
                                              </button>
 										</c:if>
 										<c:if test="${bike.b_status == '5' }">
-										<button id="deleteBtn" value="${bike.b_uuid }" data-method="notice" class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f ">
+										<button id="deleteBtn" value="${bike.b_uuid }" onclick="deleteBike()"  class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f ">
 												<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 													删除
 										</button>
