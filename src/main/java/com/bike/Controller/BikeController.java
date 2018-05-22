@@ -97,43 +97,45 @@ public class BikeController {
 			String type = UserSessionHelper.returnType(request.getSession());
 			if( type != null && type.equals(GlobalConstants.admin_type)){
 				String a_email = UserSessionHelper.getAdminLoginUUID(request.getSession());
-				request.setAttribute("a_email", a_email);
-				mv = new ModelAndView("admin/admin");
-				Map<String, String> params = getParams(request);
-				String b_status = params.get("b_status");
-		        String l_beginTime = params.get("startTime");
-		        String l_endTime = params.get("endTime");
-		        String s_uuid = params.get("site");
-		        
-		        mv.addObject("start", l_beginTime);
-		        mv.addObject("end", l_endTime);
-		        mv.addObject("b_status", b_status);
-		        mv.addObject("site", s_uuid);
-				
-		        
-		        Map<String,Object> pageMap = new HashMap<String,Object>();
-		        pageMap.put("pageNum", pageNum);
-				pageMap.put("pageSize", pageSize);
-				pageMap.put("b_status", b_status);
-				pageMap.put("s_uuid", s_uuid);
-				pageMap.put("l_beginTime", l_beginTime);
-				pageMap.put("l_endTime", l_endTime);
-		        
-				Page page = null;
-		        if(b_status == null || b_status == "" || b_status.equals("")){
-		        	page = bikeDao.getAllBikeByPage(pageMap);
-		        	mv.addObject("item", page);
-					return mv;
+				if(a_email == null) {
+					mv = new ModelAndView("login");
+				}else {
+					request.setAttribute("a_email", a_email);
+					mv = new ModelAndView("admin/admin");
+					Map<String, String> params = getParams(request);
+					String b_status = params.get("b_status");
+			        String l_beginTime = params.get("startTime");
+			        String l_endTime = params.get("endTime");
+			        String s_uuid = params.get("site");
+			        
+			        mv.addObject("start", l_beginTime);
+			        mv.addObject("end", l_endTime);
+			        mv.addObject("b_status", b_status);
+			        mv.addObject("site", s_uuid);
+					
+			        
+			        Map<String,Object> pageMap = new HashMap<String,Object>();
+			        pageMap.put("pageNum", pageNum);
+					pageMap.put("pageSize", pageSize);
+					pageMap.put("b_status", b_status);
+					pageMap.put("s_uuid", s_uuid);
+					pageMap.put("l_beginTime", l_beginTime);
+					pageMap.put("l_endTime", l_endTime);
+			        
+					Page page = null;
+			        if(b_status == null || b_status == "" || b_status.equals("")){
+			        	page = bikeDao.getAllBikeByPage(pageMap);
+			        	mv.addObject("item", page);
+						return mv;
+					}
+			        
+			        if(b_status.equals("1") || b_status == "1"){
+						page =  bikeDao.countUsingBikeByTime(pageMap);
+					}else{
+						page =  bikeDao.countOtherBike(pageMap);
+					}
+					mv.addObject("item", page);
 				}
-		        
-		        if(b_status.equals("1") || b_status == "1"){
-					page =  bikeDao.countUsingBikeByTime(pageMap);
-				}else{
-					page =  bikeDao.countOtherBike(pageMap);
-				}
-				mv.addObject("item", page);
-			}else{
-				mv = new ModelAndView("common/authority");
 			}
 			return mv;
 		
