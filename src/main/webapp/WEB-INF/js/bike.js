@@ -436,6 +436,36 @@ function fixBike(){
    			}
 			  });
 }
+
+function scrapBike(){
+	var b_uuid = $('#scrapBtn').val();
+	 $.ajax({
+         url:getContextPath()+'/bike/scrap/'+b_uuid,
+         data:b_uuid,
+         type:"POST",
+         dataType:"json",
+         success:function(data){
+        	 if(data["result"] == "00000" ){
+        		 layui.use('layer', function(){ //独立版的layer无需执行这一句
+       			  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+        		 layer.open({
+         			title: '提示'
+         			,area: '300px;'
+         			,id: 'LAY_layuipro9'
+ 					,btn: ['确定', '取消']
+         			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">单车已报废</div>'
+         			,success: function(layero){
+         				 var btn = layero.find('.layui-layer-btn');
+         				 btn.find('.layui-layer-btn0').attr({
+					        	href : getContextPath()+'/bike/bikeManage'
+         				 });
+         				}
+         			});
+        	 });
+         	}
+         }
+	 });
+}
  
 
 //if(site == ""){

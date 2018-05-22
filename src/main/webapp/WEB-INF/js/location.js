@@ -101,3 +101,31 @@ function locat(){
 //			  
 //			 	   		}
 }
+
+function repair(){
+	var b_uuid = $('#repairBtn').val();
+	 $.ajax({
+         url:getContextPath()+'/user/repair/'+b_uuid,
+         data:b_uuid,
+         type:"POST",
+         dataType:"json",
+         success:function(data){
+        	 if(data["result"] == "00000" ){
+        		 layer.open({
+         			title: '提示'
+         			,area: '300px;'
+         			,id: 'LAY_layuipro8'
+ 					,btn: ['确定', '取消']
+         			,content: '<div style="background-color: #ffffff; color: #000000; font-weight: 300;">单车已报修</div>'
+         			,success: function(layero){
+         				 var btn = layero.find('.layui-layer-btn');
+         					 btn.find('.layui-layer-btn0').attr({
+		 					        	href : getContextPath()+'/user/located'
+		            				 });
+         				 
+         				}
+         			});
+         	}
+         }
+	 });
+}

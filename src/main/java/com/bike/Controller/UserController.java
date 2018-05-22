@@ -421,6 +421,20 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping(value="repair/{b_uuid}",method=RequestMethod.POST)
+	@ResponseBody
+	public String repair(@PathVariable("b_uuid")String b_uuid) {
+		JSONObject json = new JSONObject();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("b_uuid", Integer.parseInt(b_uuid));
+		map.put("b_status", GlobalConstants.bike_broken_status);
+		int i = bikeDao.repairBike(map);
+		if(i>0) {
+			json.put("result", GlobalConstants.success);
+		}
+		return json.toJSONString();
+	}
+	
 	public static String getIPXY(String ip) {
 		 
 		String ak = "vLqhOPGXX1Q8CqvTbvg3yL6QE5mCoIuM";

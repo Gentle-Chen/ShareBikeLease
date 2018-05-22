@@ -217,5 +217,15 @@
      <update id="fixedBike" parameterType="java.util.HashMap">
      	update b_bike set b_status = #{b_status} where b_status = #{status}
      </update>
+     
+     <!-- repair bike -->
+     <update id="repairBike" parameterType="java.util.HashMap">
+     	update b_bike set b_status = #{b_status} where b_uuid = #{b_uuid}
+     </update>
+     
+     <!-- scrap bike -->
+     <update id="scrapBike" parameterType="java.util.HashMap">
+     	update b_bike set b_status = #{b_status} where b_uuid = #{b_uuid}
+     </update>
  </mapper>
  

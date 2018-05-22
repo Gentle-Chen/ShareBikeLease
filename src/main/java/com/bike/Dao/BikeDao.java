@@ -34,4 +34,8 @@ public interface BikeDao {
 	
 	public int fixedBike(Map<String,Object> bikeMap);
 	
+	public int repairBike(Map<String,Object> bikeMap);
+	
+	public int scrapBike(Map<String,Object> bikeMap);
+	
 }

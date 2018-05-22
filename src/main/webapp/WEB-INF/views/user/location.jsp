@@ -136,12 +136,20 @@
 										<c:choose>
 											<c:when test="${bike.b_status == '0' }">
 												<button id="leaseBtn" value="${bike.b_uuid },${bike.site.s_uuid }" data-method="notice" 
-												class="btn btn-sm btn-success "  style="background: blue;border-color:blue "
+												class="btn btn-sm btn-success "  style="background: #4169E1;border-color:#4169E1	 "
 												onclick="locat()">
 													<span class="glyphicon glyphicon-edit"></span>
 														租赁
 												</button>
+												<button id="repairBtn" value="${bike.b_uuid }" 
+												class="btn btn-sm btn-success "  style="background: green;border-color:green	 "
+												onclick="repair()">
+													<span class="glyphicon glyphicon-edit"></span>
+														报修
+												</button>
 											</c:when>
+<%-- 											<c:when test="${bike.b_status == '1' }"> --%>
+<%-- 											</c:when> --%>
 											<c:otherwise>--</c:otherwise>
 										</c:choose>
 									</td>

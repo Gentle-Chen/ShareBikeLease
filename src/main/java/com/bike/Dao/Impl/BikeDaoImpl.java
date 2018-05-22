@@ -146,6 +146,20 @@ public class BikeDaoImpl implements BikeDao{
 		int i = sqlSessionTemplate.delete(statement,bikeMap);
 		return i;
 	}
+
+	@Override
+	public int repairBike(Map<String, Object> bikeMap) {
+		String statement = "com.bike.Mapper.BikeMapper.repairBike";
+		int i = sqlSessionTemplate.update(statement,bikeMap);
+		return i;
+	}
+	
+	@Override
+	public int scrapBike(Map<String, Object> bikeMap) {
+		String statement = "com.bike.Mapper.BikeMapper.scrapBike";
+		int i = sqlSessionTemplate.update(statement,bikeMap);
+		return i;
+	}
 	
 	
 }

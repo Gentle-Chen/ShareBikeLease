@@ -265,6 +265,20 @@ public class BikeController {
 		return json.toJSONString();
 	}
 	
+	@RequestMapping(value="scrap/{b_uuid}",method=RequestMethod.POST)
+	@ResponseBody
+	public String scrap(@PathVariable("b_uuid")String b_uuid) {
+		JSONObject json = new JSONObject();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("b_uuid", Integer.parseInt(b_uuid));
+		map.put("b_status", GlobalConstants.bike_scrap_status);
+		int i = bikeDao.scrapBike(map);
+		if(i>0) {
+			json.put("result", GlobalConstants.success);
+		}
+		return json.toJSONString();
+	}
+	
 	
 	 protected static Map<String, String> getParams(HttpServletRequest request) {
 	        Map<String, String> params = new HashMap<String, String>();

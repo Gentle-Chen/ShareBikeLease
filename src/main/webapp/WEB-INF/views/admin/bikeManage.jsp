@@ -158,6 +158,10 @@
                                                	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                                 	修理
                                              </button>
+                                             <button id="scrapBtn" value="${bike.b_uuid }" onclick="scrapBike()"  class="btn btn-sm btn-success "  style="background: #ef460f;border-color:#ef460f ">
+                                               	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                	报废
+                                             </button>
 										</c:if>
 										<c:if test="${bike.b_status == '3' }">--
 										</c:if>
