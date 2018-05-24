@@ -53,7 +53,7 @@ public class TestMapController {
 	
 	@RequestMapping(value = "test33")
 	public void listPage33(HttpServletRequest request,HttpServletResponse response) throws IOException{
-		DrawUtil d = new DrawUtil(1,1,1,1,1);
+		DrawUtil d = new DrawUtil(1,1,1,1,1,1);
 		ChartUtilities.writeChartAsJPEG(response.getOutputStream(), 1.0f, d.getChartPanel().getChart(), 500, 270, null);
 	}
 	

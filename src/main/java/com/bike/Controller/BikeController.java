@@ -149,8 +149,9 @@ public class BikeController {
 		int c = bikeDao.countBike("2");
 		int d = bikeDao.countBike("3");
 		int e = bikeDao.countBike("4");
+		int f = bikeDao.countBike("5");
 		try {
-			DrawUtil drawUtil = new DrawUtil(a,b,c,d,e);
+			DrawUtil drawUtil = new DrawUtil(a,b,c,d,e,f);
 			ChartUtilities.writeChartAsJPEG(response.getOutputStream(), 1.0f, drawUtil.getChartPanel().getChart(), 500, 270, null);
 		} catch (IOException e1) {
 			e1.printStackTrace();

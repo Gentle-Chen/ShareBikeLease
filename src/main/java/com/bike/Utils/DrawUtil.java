@@ -16,8 +16,8 @@ import org.jfree.data.general.DefaultPieDataset;
 public class DrawUtil {
 	
 	ChartPanel frame1;  
-    public DrawUtil(int a, int b, int c, int d, int e) throws IOException{  
-          DefaultPieDataset data = getDataSet(a,b,c,d,e);  
+    public DrawUtil(int a, int b, int c, int d, int e,int f) throws IOException{  
+          DefaultPieDataset data = getDataSet(a,b,c,d,e,f);  
           JFreeChart chart = ChartFactory.createPieChart3D("单车数据图",data,true,true,false);  
         //���ðٷֱ�  
           PiePlot pieplot = (PiePlot) chart.getPlot();  
@@ -42,13 +42,14 @@ public class DrawUtil {
           
     }  
     
-    private static DefaultPieDataset getDataSet(int a, int b, int c, int d, int e) {  
+    private static DefaultPieDataset getDataSet(int a, int b, int c, int d, int e,int f) {  
         DefaultPieDataset dataset = new DefaultPieDataset();  
         dataset.setValue("空闲",a);  
         dataset.setValue("ʹ使用中",b);  
         dataset.setValue("损坏",c);  
         dataset.setValue("修理中",d);  
-        dataset.setValue("报废",e);  
+        dataset.setValue("闲置",e);  
+        dataset.setValue("报废",f); 
         return dataset;  
     }  
     

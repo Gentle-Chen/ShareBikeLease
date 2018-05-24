@@ -51,7 +51,7 @@ create table b_bike
 --  b_price DECIMAL(8,2) not null,--
     b_status varchar(255) not null, -- 0代表空闲，1代表使用中，2代表损坏，3代表修理中,4代表闲置，5代表报废 
     s_uuid int not null, -- 1代表在使用中,没有停靠站点.其他则代表站点ID 
-	foreign key (s_uuid) references b_site(s_uuid)
+	foreign key (s_uuid) references b_site(s_uuid) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --  insert into b_bike values ('1','001','1','1');insert into b_bike values ('2','002','5','1');
  -- insert into b_bike values ('3','003','0','2');insert into b_bike values ('4','004','0','2');
