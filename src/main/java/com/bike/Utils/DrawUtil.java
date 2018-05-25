@@ -21,9 +21,9 @@ public class DrawUtil {
           JFreeChart chart = ChartFactory.createPieChart3D("单车数据图",data,true,true,false);  
         //���ðٷֱ�  
           PiePlot pieplot = (PiePlot) chart.getPlot();  
-          DecimalFormat df = new DecimalFormat("0.00%");//���һ��DecimalFormat������Ҫ������С������  
+          DecimalFormat df = new DecimalFormat("#");//���һ��DecimalFormat������Ҫ������С������  
           NumberFormat nf = NumberFormat.getNumberInstance();//���һ��NumberFormat����  
-          StandardPieSectionLabelGenerator sp1 = new StandardPieSectionLabelGenerator("{0}  {2}", nf, df);//���StandardPieSectionLabelGenerator����  
+          StandardPieSectionLabelGenerator sp1 = new StandardPieSectionLabelGenerator("{0}  {1}", nf, df);//���StandardPieSectionLabelGenerator����  
           pieplot.setLabelGenerator(sp1);//���ñ�ͼ��ʾ�ٷֱ�  
         
       //û�����ݵ�ʱ����ʾ������  
