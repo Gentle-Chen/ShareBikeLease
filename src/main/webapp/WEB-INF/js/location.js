@@ -12,6 +12,7 @@ function locat(){
 					  var bs = $('#leaseBtn').val();
 					  var b_uuid = bs.split(",")[0];
 					  var s_uuid = bs.split(",")[1];
+					  var forwardSite = $('#forwardSite').val();
 						layer.open({
 						    time: 0 //不自动关闭
 						    ,title: '提示'
@@ -21,7 +22,7 @@ function locat(){
 						    ,btn: ['确定', '取消']
 						    ,yes: function(index){
 						        $.ajax({
-						            url:getContextPath()+'/lease/'+b_uuid+'/'+s_uuid,
+						            url:getContextPath()+'/lease/'+b_uuid+'/'+s_uuid+'/'+forwardSite,
 						            data:b_uuid,
 						            type:"POST",
 						            dataType:"json",
@@ -41,7 +42,7 @@ function locat(){
 								            				 });
 						            				 }else{
 						            					 btn.find('.layui-layer-btn0').attr({
-								 					        	href : getContextPath()+'/user/deposit'
+								 					        	href : getContextPath()+'/user/forwardDeposit/'+data["forwardSite"]
 								            				 });
 						            				 }
 						            				 
@@ -104,8 +105,9 @@ function locat(){
 
 function repair(){
 	var b_uuid = $('#repairBtn').val();
+	var b_status = $('#forwardSite').val();
 	 $.ajax({
-         url:getContextPath()+'/user/repair/'+b_uuid,
+         url:getContextPath()+'/user/repair/'+b_uuid+'/'+b_status,
          data:b_uuid,
          type:"POST",
          dataType:"json",
@@ -120,7 +122,7 @@ function repair(){
          			,success: function(layero){
          				 var btn = layero.find('.layui-layer-btn');
          					 btn.find('.layui-layer-btn0').attr({
-		 					        	href : getContextPath()+'/user/located'
+		 					        	href : getContextPath()+'/user/forwardLocation/'+data["forwardSite"] 
 		            				 });
          				 
          				}

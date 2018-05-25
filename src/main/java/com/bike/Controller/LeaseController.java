@@ -40,10 +40,10 @@ public class LeaseController {
 	public String toLeaseBike(){
 		return "bike/leaseBike";
 	}
-	@RequestMapping(value="lease/{b_uuid}/{s_uuid}",method=RequestMethod.POST)
+	@RequestMapping(value="lease/{b_uuid}/{s_uuid}/{forwardSite}",method=RequestMethod.POST)
 	@ResponseBody
 	public String leaseBike(@PathVariable("b_uuid")String b_uuid,@PathVariable("s_uuid")String s_uuid,
-			HttpServletRequest request) throws ParseException{
+			@PathVariable("forwardSite")String forwardSite,HttpServletRequest request) throws ParseException{
 		
 		JSONObject json = new JSONObject();
 		
@@ -56,6 +56,7 @@ public class LeaseController {
 			json.put("result", GlobalConstants.deposit_no_pay);
 			json.put("msg", "您尚未缴纳押金，请先缴纳押金");
 			json.put("type", "deposit");
+			json.put("forwardSite", forwardSite);
 		}else {
 			List<Lease> l = leaseDao.getLeaseBike(Integer.parseInt(user.getU_uuid()));
 			for(int i=0;i<l.size();i++) {

@@ -71,6 +71,7 @@
 			</span></p><br />
 			
 		</div>
+		<input id="forwardSite" name="forwardSite" type="hidden" value="${forwardSite}" class="tr_pay am-btn" />
 		<c:if test="${deposit.d_status == '0' || deposit == null}">
 			<div class="tr_paybox"> 
 				

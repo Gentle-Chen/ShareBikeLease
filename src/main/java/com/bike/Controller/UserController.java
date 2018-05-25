@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.MvcNamespaceHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bike.Constant.GlobalConstants;
@@ -198,10 +202,17 @@ public class UserController {
 		return mv;
 	}
 	
+	@RequestMapping(value="forwardLocation/{forwardSite}")
+	public String forwardLocation(@PathVariable("forwardSite")String forwardSite, HttpServletRequest request,RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("forwardSite", forwardSite);
+		return "redirect:/user/location";  
+//		return new ModelAndView(new RedirectView("/ShareBikeLease/user/location"));
+	}
+	
 	@RequestMapping(value="location")
 	public ModelAndView location(@RequestParam(required = false, defaultValue = "1")
     int pageNum, @RequestParam(required = false, defaultValue = "2")
-    int pageSize, HttpServletRequest request) {
+    int pageSize, HttpServletRequest request, ModelMap modelMap) {
 		
 		ModelAndView mv = new ModelAndView("user/location");
 		
@@ -212,7 +223,12 @@ public class UserController {
 		if(locateduuid == null) {
 			locateduuid = params.get("site1");
 		}
+		if(locateduuid == null) {
+			locateduuid = modelMap.get("forwardSite").toString();
+		}
 		mv.addObject("nsite", locateduuid);
+		
+		mv.addObject("forwardSite", locateduuid);
 		
 		
 		List valueObject = new ArrayList();
@@ -354,14 +370,23 @@ public class UserController {
 		return json.toJSONString();
 	}
 	
+	@RequestMapping(value="forwardDeposit/{forwardSite}")
+	public String forwardDeposit(@PathVariable("forwardSite")String forwardSite, HttpServletRequest request,RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("forwardSite", forwardSite);
+		return "redirect:/user/deposit";  
+	}
+	
 	@RequestMapping(value="deposit")
-	public ModelAndView toPayDeposit(HttpServletRequest request) {
+	public ModelAndView toPayDeposit(HttpServletRequest request,ModelMap map) {
 		UserSessionHelper.getUserLoginUUID(request.getSession());
 		User user = userDao.getUserByEmail(UserSessionHelper.getUserLoginUUID(request.getSession()));
 		ModelAndView mv = new ModelAndView("user/payDeposit");
 		Deposit deposit = userDao.checkDeposit(Integer.parseInt(user.getU_uuid()));
 		mv.addObject("User",user);
 		mv.addObject("deposit",deposit);
+		if(map.get("forwardSite") != null) {
+			mv.addObject("forwardSite",map.get("forwardSite").toString());
+		}
 		return mv;
 	}
 	
@@ -377,6 +402,7 @@ public class UserController {
 			int i = userDao.payDeposit(user);
 			if(i>1) {
 				json.put("result", GlobalConstants.success);
+				json.put("forwardSite", map.get("forwardSite").toString());
 			}else{
 				
 			}
@@ -421,9 +447,9 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value="repair/{b_uuid}",method=RequestMethod.POST)
+	@RequestMapping(value="repair/{b_uuid}/{b_status}",method=RequestMethod.POST)
 	@ResponseBody
-	public String repair(@PathVariable("b_uuid")String b_uuid) {
+	public String repair(@PathVariable("b_uuid")String b_uuid,@PathVariable("b_status")String b_status) {
 		JSONObject json = new JSONObject();
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("b_uuid", Integer.parseInt(b_uuid));
@@ -431,6 +457,7 @@ public class UserController {
 		int i = bikeDao.repairBike(map);
 		if(i>0) {
 			json.put("result", GlobalConstants.success);
+			json.put("forwardSite", b_status);
 		}
 		return json.toJSONString();
 	}

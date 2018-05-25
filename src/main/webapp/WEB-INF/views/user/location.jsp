@@ -74,6 +74,8 @@
   					  </div><br>
 			  			<form class="form-horizontal" method="post" action="${ctx}/user/location" id="locationForm">
 			  			<input type="hidden" value="${nsite}" id="site1" name="site1">
+			  			
+			  			<input type="hidden" value="${forwardSite}" id="forwardSite" name="forwardSite">
 	  						<div class="form-group">
 	                          <label class="col-sm-2 control-label" style="width:100px;">站点选择：</label>
 	                          	 <select id="b_status" name="b_status" class="col-sm-2" style="height:35px;width:100px">

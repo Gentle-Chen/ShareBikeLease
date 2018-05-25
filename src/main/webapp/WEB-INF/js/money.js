@@ -84,8 +84,10 @@ function recharge(){
 }
 
 function payDeposit(u_uuid){
+	var forwardSite = $('#forwardSite').val();
 	var map = {
-		"u_uuid":u_uuid	
+		"u_uuid":u_uuid,
+		"forwardSite":forwardSite
 	};
 	$.ajax({
 		timeout: 3000,
@@ -108,9 +110,15 @@ function payDeposit(u_uuid){
         		    ,btn: ['确定']
 	        		,success: function(layero){
            				 var btn = layero.find('.layui-layer-btn');
-           				 btn.find('.layui-layer-btn0').attr({
-					        	href : getContextPath()+'/user/deposit'
-           				 });
+           				 if(data["forwardSite"] != null ){
+           					 btn.find('.layui-layer-btn0').attr({
+ 					        	href : getContextPath()+'/user/forwardLocation/'+data["forwardSite"]
+            				 });
+           				 }else{
+           					 btn.find('.layui-layer-btn0').attr({
+ 					        	href : getContextPath()+'/user/deposit'
+            				 }); 
+           				 }
            				}
         			});
         		});
